@@ -7,7 +7,14 @@ class DeactivateUserUseCase extends UseCase {
   }
 
   async apply(input) {
-    throw new Error("Not implemented");
+    // Verificar que el usuario existe
+    const existingUser = await this.repos.users.findById(input.id);
+    if (!existingUser) {
+      throw new Error("User not found");
+    }
+
+    // Desactivar usuario (borrado lógico)
+    return await this.repos.users.update(input.id, { active: false });
   }
 }
 

@@ -7,7 +7,14 @@ class CreateUserUseCase extends UseCase {
   }
 
   async apply(input) {
-    throw new Error("Not implemented");
+    // Validar que el email sea único
+    const existingUser = await this.repos.users.findByEmail(input.email);
+    if (existingUser) {
+      throw new Error("Email already exists");
+    }
+
+    // Crear usuario
+    return await this.repos.users.create(input);
   }
 }
 

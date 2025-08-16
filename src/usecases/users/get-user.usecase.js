@@ -7,7 +7,11 @@ class GetUserUseCase extends UseCase {
   }
 
   async apply(input) {
-    throw new Error("Not implemented");
+    const user = await this.repos.users.findById(input.id);
+    if (!user) {
+      throw new Error("User not found");
+    }
+    return user;
   }
 }
 
