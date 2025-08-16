@@ -7,7 +7,11 @@ class GetTicketUseCase extends UseCase {
   }
 
   async apply(input) {
-    throw new Error("Not implemented");
+    const ticket = await this.repos.tickets.findById(input.id);
+    if (!ticket) {
+      throw new Error("Ticket not found");
+    }
+    return ticket;
   }
 }
 

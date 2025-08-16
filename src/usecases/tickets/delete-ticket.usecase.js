@@ -7,7 +7,14 @@ class DeleteTicketUseCase extends UseCase {
   }
 
   async apply(input) {
-    throw new Error("Not implemented");
+    // Verificar que el ticket existe
+    const existingTicket = await this.repos.tickets.findById(input.id);
+    if (!existingTicket) {
+      throw new Error("Ticket not found");
+    }
+
+    // Eliminar ticket (borrado duro)
+    return await this.repos.tickets.delete(input.id);
   }
 }
 

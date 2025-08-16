@@ -100,3 +100,126 @@ curl -X DELETE http://localhost:3000/users/1
 - `admin`: Administrador del sistema
 - `agent`: Agente de soporte
 - `customer`: Cliente (default)
+
+## Tickets
+
+### GET /tickets
+Lista tickets con filtros y paginación.
+
+```bash
+# Listar todos (página 1, 20 por página por defecto)
+curl http://localhost:3000/tickets
+
+# Con filtros
+curl "http://localhost:3000/tickets?status=open&priority=high&page=1&pageSize=10"
+
+# Filtros por usuario
+curl "http://localhost:3000/tickets?assignedUserId=1&createdByUserId=2"
+
+# Filtros por fecha
+curl "http://localhost:3000/tickets?from=2024-01-01&to=2024-01-31"
+
+# Combinando filtros
+curl "http://localhost:3000/tickets?status=in_progress&assignedUserId=1&from=2024-01-01"
+```
+
+Response:
+```json
+{
+  "data": [
+    {
+      "id": 1,
+      "title": "Login issue",
+      "description": "Cannot login to account",
+      "status": "open",
+      "priority": "high",
+      "category": "bug",
+      "createdAt": "2024-01-01T00:00:00.000Z",
+      "updatedAt": "2024-01-01T00:00:00.000Z",
+      "resolvedAt": null,
+      "createdByUserId": 2,
+      "assignedUserId": 1,
+      "createdBy": {
+        "id": 2,
+        "name": "John Customer",
+        "email": "customer@example.com"
+      },
+      "assignedTo": {
+        "id": 1,
+        "name": "Jane Agent", 
+        "email": "agent@example.com"
+      }
+    }
+  ],
+  "page": 1,
+  "pageSize": 20,
+  "total": 1,
+  "totalPages": 1
+}
+```
+
+### POST /tickets
+Crear nuevo ticket.
+
+```bash
+curl -X POST http://localhost:3000/tickets \
+  -H "Content-Type: application/json" \
+  -d '{
+    "title": "Login issue",
+    "description": "Cannot access my account",
+    "createdByUserId": 2,
+    "assignedUserId": 1,
+    "priority": "high",
+    "category": "bug"
+  }'
+```
+
+### GET /tickets/:id
+Obtener ticket por ID.
+
+```bash
+curl http://localhost:3000/tickets/1
+```
+
+### PUT /tickets/:id
+Actualizar ticket (solo status, priority, assignedUserId).
+
+```bash
+curl -X PUT http://localhost:3000/tickets/1 \
+  -H "Content-Type: application/json" \
+  -d '{
+    "status": "in_progress",
+    "priority": "med",
+    "assignedUserId": 3
+  }'
+```
+
+### DELETE /tickets/:id
+Eliminar ticket (borrado duro).
+
+```bash
+curl -X DELETE http://localhost:3000/tickets/1
+# Response: { "success": true }
+```
+
+## Estados de Tickets
+- `open`: Abierto (default)
+- `in_progress`: En progreso
+- `resolved`: Resuelto
+- `closed`: Cerrado
+
+## Prioridades
+- `low`: Baja
+- `med`: Media (default)
+- `high`: Alta
+
+## Filtros disponibles
+- `status`: Estado del ticket
+- `priority`: Prioridad del ticket
+- `category`: Categoría del ticket
+- `assignedUserId`: ID del usuario asignado
+- `createdByUserId`: ID del usuario creador
+- `from`: Fecha de inicio (YYYY-MM-DD)
+- `to`: Fecha de fin (YYYY-MM-DD)
+- `page`: Número de página
+- `pageSize`: Elementos por página
