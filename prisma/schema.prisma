@@ -6,3 +6,34 @@ datasource db {
   provider = "sqlite"
   url      = env("DATABASE_URL")
 }
+
+model User {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String   @unique
+  role      String   // admin|agent|customer
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  createdTickets Ticket[] @relation("CreatedBy")
+  assignedTickets Ticket[] @relation("AssignedTo")
+}
+
+model Ticket {
+  id          Int       @id @default(autoincrement())
+  title       String
+  description String?
+  status      String    @default("open") // open|in_progress|resolved|closed
+  priority    String    @default("med")  // low|med|high
+  category    String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  resolvedAt  DateTime?
+  
+  createdByUserId Int
+  createdBy       User @relation("CreatedBy", fields: [createdByUserId], references: [id])
+  
+  assignedUserId Int?
+  assignedTo     User? @relation("AssignedTo", fields: [assignedUserId], references: [id])
+}
