@@ -223,3 +223,46 @@ curl -X DELETE http://localhost:3000/tickets/1
 - `to`: Fecha de fin (YYYY-MM-DD)
 - `page`: Número de página
 - `pageSize`: Elementos por página
+
+## Estadísticas
+
+### GET /stats/count-by-status
+Obtiene conteo de tickets agrupados por status con filtros opcionales de fecha.
+
+```bash
+# Conteo general de todos los tickets
+curl http://localhost:3000/stats/count-by-status
+
+# Conteo en un rango de fechas
+curl "http://localhost:3000/stats/count-by-status?from=2024-01-01&to=2024-01-31"
+
+# Conteo desde una fecha
+curl "http://localhost:3000/stats/count-by-status?from=2024-01-01"
+
+# Conteo hasta una fecha
+curl "http://localhost:3000/stats/count-by-status?to=2024-01-31"
+```
+
+Response:
+```json
+{
+  "from": "2024-01-01",
+  "to": "2024-01-31",
+  "counts": {
+    "open": 15,
+    "in_progress": 8,
+    "resolved": 12,
+    "closed": 5
+  }
+}
+```
+
+**Parámetros:**
+- `from` (opcional): Fecha de inicio en formato YYYY-MM-DD
+- `to` (opcional): Fecha de fin en formato YYYY-MM-DD
+
+**Notas:**
+- Si no se proporcionan fechas, cuenta todos los tickets
+- Los conteos incluyen todos los estados posibles (open, in_progress, resolved, closed)
+- Estados sin tickets aparecen con count: 0
+- Fechas inválidas retornan error 400

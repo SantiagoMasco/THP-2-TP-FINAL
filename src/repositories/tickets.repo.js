@@ -65,6 +65,34 @@ class TicketsRepository {
       where
     });
   }
+
+  async countByStatus(where) {
+    const statuses = ['open', 'in_progress', 'resolved', 'closed'];
+    const results = {};
+
+    // Inicializar todos los estados con 0
+    for (const status of statuses) {
+      results[status] = 0;
+    }
+
+    // Obtener conteos reales desde la base de datos
+    const counts = await prisma.ticket.groupBy({
+      by: ['status'],
+      where,
+      _count: {
+        status: true
+      }
+    });
+
+    // Mapear los resultados
+    for (const count of counts) {
+      if (statuses.includes(count.status)) {
+        results[count.status] = count._count.status;
+      }
+    }
+
+    return results;
+  }
 }
 
 module.exports = { TicketsRepository };
