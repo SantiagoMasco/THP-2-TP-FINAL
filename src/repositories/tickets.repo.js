@@ -1,4 +1,5 @@
 const { prisma } = require("../lib/prisma");
+const { DEFAULT_TICKET_STATUS, DEFAULT_TICKET_PRIORITY, VALID_TICKET_STATUSES } = require("../constants/enums");
 
 class TicketsRepository {
   async findById(id) {
@@ -16,8 +17,8 @@ class TicketsRepository {
       data: {
         title: data.title,
         description: data.description,
-        status: data.status || "open",
-        priority: data.priority || "med",
+        status: data.status || DEFAULT_TICKET_STATUS,
+        priority: data.priority || DEFAULT_TICKET_PRIORITY,
         category: data.category,
         createdByUserId: parseInt(data.createdByUserId),
         assignedUserId: data.assignedUserId ? parseInt(data.assignedUserId) : null
@@ -80,11 +81,10 @@ class TicketsRepository {
   }
 
   async countByStatus(where) {
-    const statuses = ['open', 'in_progress', 'resolved', 'closed'];
     const results = {};
 
     // Inicializar todos los estados con 0
-    for (const status of statuses) {
+    for (const status of VALID_TICKET_STATUSES) {
       results[status] = 0;
     }
 
@@ -99,7 +99,7 @@ class TicketsRepository {
 
     // Mapear los resultados
     for (const count of counts) {
-      if (statuses.includes(count.status)) {
+      if (VALID_TICKET_STATUSES.includes(count.status)) {
         results[count.status] = count._count.status;
       }
     }

@@ -1,4 +1,5 @@
 const { prisma } = require("../lib/prisma");
+const { DEFAULT_USER_ROLE } = require("../constants/enums");
 
 class UsersRepository {
   async findById(id) {
@@ -18,7 +19,7 @@ class UsersRepository {
       data: {
         name: data.name,
         email: data.email,
-        role: data.role || "customer",
+        role: data.role || DEFAULT_USER_ROLE,
         active: data.active !== undefined ? data.active : true
       }
     });

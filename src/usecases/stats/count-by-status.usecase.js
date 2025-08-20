@@ -1,4 +1,5 @@
 const { UseCase } = require("../base");
+const { VALID_TICKET_STATUSES } = require("../../constants/enums");
 
 class CountByStatusUseCase extends UseCase {
   constructor(repos) {
@@ -35,10 +36,9 @@ class CountByStatusUseCase extends UseCase {
     const rawCounts = await this.repos.tickets.countByStatus(where);
 
     // Asegurar que todos los estados estén presentes
-    const statuses = ['open', 'in_progress', 'resolved', 'closed'];
     const counts = {};
     
-    for (const status of statuses) {
+    for (const status of VALID_TICKET_STATUSES) {
       counts[status] = rawCounts[status] || 0;
     }
 

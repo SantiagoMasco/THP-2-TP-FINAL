@@ -5,6 +5,16 @@ const { GetUserUseCase } = require("../usecases/users/get-user.usecase");
 const { ListUsersUseCase } = require("../usecases/users/list-users.usecase");
 const { UpdateUserUseCase } = require("../usecases/users/update-user.usecase");
 const { DeactivateUserUseCase } = require("../usecases/users/deactivate-user.usecase");
+const { 
+  validateId, 
+  validateRole, 
+  validateRequiredString, 
+  validateOptionalBoolean,
+  validateScope,
+  validateStatus,
+  parsePage,
+  parsePageSize 
+} = require("../utils/validators");
 
 const repos = {
   users: new UsersRepository(),
@@ -16,16 +26,10 @@ class UsersController {
     try {
       const { name, email, role } = req.body;
 
-      // Validaciones básicas
-      if (!name || typeof name !== 'string') {
-        return res.status(400).json({ error: "Name is required and must be a string" });
-      }
-      if (!email || typeof email !== 'string') {
-        return res.status(400).json({ error: "Email is required and must be a string" });
-      }
-      if (role && !['admin', 'agent', 'customer'].includes(role)) {
-        return res.status(400).json({ error: "Role must be admin, agent, or customer" });
-      }
+      // Validaciones usando validators centralizados
+      validateRequiredString(name, 'name');
+      validateRequiredString(email, 'email');
+      validateRole(role);
 
       const usecase = new CreateUserUseCase(repos);
       const user = await usecase.apply({ name, email, role });
@@ -35,6 +39,13 @@ class UsersController {
       if (error.message === "Email already exists") {
         return res.status(409).json({ error: error.message });
       }
+      // Manejar errores de validación
+      if (error.message && (
+        error.message.includes('required') || 
+        error.message.includes('must be')
+      )) {
+        return res.status(400).json({ error: error.message });
+      }
       res.status(500).json({ error: "Internal server error" });
     }
   }
@@ -42,18 +53,22 @@ class UsersController {
   async get(req, res) {
     try {
       const { id } = req.params;
-
-      if (!id || isNaN(parseInt(id))) {
-        return res.status(400).json({ error: "Valid ID is required" });
-      }
+      const validatedId = validateId(id);
 
       const usecase = new GetUserUseCase(repos);
-      const user = await usecase.apply({ id: parseInt(id) });
+      const user = await usecase.apply({ id: validatedId });
       
       res.json(user);
     } catch (error) {
       if (error.message === "User not found") {
         return res.status(404).json({ error: error.message });
+      }
+      // Manejar errores de validación
+      if (error.message && (
+        error.message.includes('required') || 
+        error.message.includes('must be')
+      )) {
+        return res.status(400).json({ error: error.message });
       }
       res.status(500).json({ error: "Internal server error" });
     }
@@ -75,28 +90,27 @@ class UsersController {
       const { id } = req.params;
       const { name, role, active } = req.body;
 
-      if (!id || isNaN(parseInt(id))) {
-        return res.status(400).json({ error: "Valid ID is required" });
-      }
+      const validatedId = validateId(id);
 
-      // Validaciones de tipos
-      if (name !== undefined && typeof name !== 'string') {
-        return res.status(400).json({ error: "Name must be a string" });
-      }
-      if (role !== undefined && !['admin', 'agent', 'customer'].includes(role)) {
-        return res.status(400).json({ error: "Role must be admin, agent, or customer" });
-      }
-      if (active !== undefined && typeof active !== 'boolean') {
-        return res.status(400).json({ error: "Active must be a boolean" });
-      }
+      // Validaciones de tipos opcionales
+      if (name !== undefined) validateRequiredString(name, 'name');
+      validateRole(role); // ya maneja undefined internamente
+      validateOptionalBoolean(active, 'active');
 
       const usecase = new UpdateUserUseCase(repos);
-      const user = await usecase.apply({ id: parseInt(id), name, role, active });
+      const user = await usecase.apply({ id: validatedId, name, role, active });
       
       res.json(user);
     } catch (error) {
       if (error.message === "User not found") {
         return res.status(404).json({ error: error.message });
+      }
+      // Manejar errores de validación
+      if (error.message && (
+        error.message.includes('required') || 
+        error.message.includes('must be')
+      )) {
+        return res.status(400).json({ error: error.message });
       }
       res.status(500).json({ error: "Internal server error" });
     }
@@ -105,18 +119,22 @@ class UsersController {
   async deactivate(req, res) {
     try {
       const { id } = req.params;
-
-      if (!id || isNaN(parseInt(id))) {
-        return res.status(400).json({ error: "Valid ID is required" });
-      }
+      const validatedId = validateId(id);
 
       const usecase = new DeactivateUserUseCase(repos);
-      const user = await usecase.apply({ id: parseInt(id) });
+      const user = await usecase.apply({ id: validatedId });
       
       res.json(user);
     } catch (error) {
       if (error.message === "User not found") {
         return res.status(404).json({ error: error.message });
+      }
+      // Manejar errores de validación
+      if (error.message && (
+        error.message.includes('required') || 
+        error.message.includes('must be')
+      )) {
+        return res.status(400).json({ error: error.message });
       }
       res.status(500).json({ error: "Internal server error" });
     }
@@ -127,28 +145,19 @@ class UsersController {
       const { userId } = req.params;
       const { page, pageSize, scope, status } = req.query;
 
-      // Validar userId
-      if (!userId || isNaN(parseInt(userId))) {
-        return res.status(400).json({ error: "Valid userId is required" });
-      }
-
-      // Lógica de paginación inline
-      const pageNum = Math.max(1, parseInt(page, 10) || 1);
-      let pageSizeNum = parseInt(pageSize, 10) || 20;
-      pageSizeNum = Math.max(1, Math.min(pageSizeNum, 50)); // max 50 como se solicitó
-      
-      // Validar scope
-      const scopeValue = scope || "assigned";
-      if (!["assigned", "created"].includes(scopeValue)) {
-        return res.status(400).json({ error: "Scope must be assigned or created" });
-      }
+      // Validaciones usando validators centralizados
+      const validatedUserId = validateId(userId, 'userId');
+      const pageNum = parsePage(page);
+      const pageSizeNum = parsePageSize(pageSize, 20, 50);
+      const scopeValue = validateScope(scope) || "assigned";
+      if (status) validateStatus(status);
 
       // Construir filtros WHERE según scope
       const where = {};
       if (scopeValue === "assigned") {
-        where.assignedUserId = parseInt(userId);
+        where.assignedUserId = validatedUserId;
       } else { // scope === "created"
-        where.createdByUserId = parseInt(userId);
+        where.createdByUserId = validatedUserId;
       }
 
       // Agregar filtro de status si se proporciona
@@ -182,6 +191,14 @@ class UsersController {
         hasNext
       });
     } catch (error) {
+      // Manejar errores de validación
+      if (error.message && (
+        error.message.includes('required') || 
+        error.message.includes('must be') ||
+        error.message.includes('Scope must be')
+      )) {
+        return res.status(400).json({ error: error.message });
+      }
       res.status(500).json({ error: "Internal server error" });
     }
   }
