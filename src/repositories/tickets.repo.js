@@ -60,6 +60,19 @@ class TicketsRepository {
     });
   }
 
+  async findMany({ where, orderBy, skip, take }) {
+    return await prisma.ticket.findMany({
+      where,
+      orderBy,
+      skip,
+      take,
+      include: {
+        createdBy: true,
+        assignedTo: true
+      }
+    });
+  }
+
   async count(where) {
     return await prisma.ticket.count({
       where

@@ -19,4 +19,7 @@ router.put("/:id", controller.update.bind(controller));
 // DELETE /users/:id - Desactivar usuario (borrado lógico)
 router.delete("/:id", controller.deactivate.bind(controller));
 
+// GET /users/:userId/tickets - Obtener tickets del usuario
+router.get("/:userId/tickets", controller.getUserTickets.bind(controller));
+
 module.exports = router;

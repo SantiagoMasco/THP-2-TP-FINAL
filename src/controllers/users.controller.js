@@ -1,4 +1,5 @@
 const { UsersRepository } = require("../repositories/users.repo");
+const { TicketsRepository } = require("../repositories/tickets.repo");
 const { CreateUserUseCase } = require("../usecases/users/create-user.usecase");
 const { GetUserUseCase } = require("../usecases/users/get-user.usecase");
 const { ListUsersUseCase } = require("../usecases/users/list-users.usecase");
@@ -6,7 +7,8 @@ const { UpdateUserUseCase } = require("../usecases/users/update-user.usecase");
 const { DeactivateUserUseCase } = require("../usecases/users/deactivate-user.usecase");
 
 const repos = {
-  users: new UsersRepository()
+  users: new UsersRepository(),
+  tickets: new TicketsRepository()
 };
 
 class UsersController {
@@ -116,6 +118,70 @@ class UsersController {
       if (error.message === "User not found") {
         return res.status(404).json({ error: error.message });
       }
+      res.status(500).json({ error: "Internal server error" });
+    }
+  }
+
+  async getUserTickets(req, res) {
+    try {
+      const { userId } = req.params;
+      const { page, pageSize, scope, status } = req.query;
+
+      // Validar userId
+      if (!userId || isNaN(parseInt(userId))) {
+        return res.status(400).json({ error: "Valid userId is required" });
+      }
+
+      // Lógica de paginación inline
+      const pageNum = Math.max(1, parseInt(page, 10) || 1);
+      let pageSizeNum = parseInt(pageSize, 10) || 20;
+      pageSizeNum = Math.max(1, Math.min(pageSizeNum, 50)); // max 50 como se solicitó
+      
+      // Validar scope
+      const scopeValue = scope || "assigned";
+      if (!["assigned", "created"].includes(scopeValue)) {
+        return res.status(400).json({ error: "Scope must be assigned or created" });
+      }
+
+      // Construir filtros WHERE según scope
+      const where = {};
+      if (scopeValue === "assigned") {
+        where.assignedUserId = parseInt(userId);
+      } else { // scope === "created"
+        where.createdByUserId = parseInt(userId);
+      }
+
+      // Agregar filtro de status si se proporciona
+      if (status) {
+        where.status = status;
+      }
+
+      // Calcular skip y take
+      const skip = (pageNum - 1) * pageSizeNum;
+      const take = pageSizeNum + 1; // +1 para detectar hasNext
+
+      // Buscar tickets con ordenamiento
+      const tickets = await repos.tickets.findMany({
+        where,
+        orderBy: [
+          { createdAt: 'desc' },
+          { id: 'desc' }
+        ],
+        skip,
+        take
+      });
+
+      // Determinar hasNext y ajustar data
+      const hasNext = tickets.length > pageSizeNum;
+      const data = hasNext ? tickets.slice(0, pageSizeNum) : tickets;
+
+      res.json({
+        data,
+        page: pageNum,
+        pageSize: pageSizeNum,
+        hasNext
+      });
+    } catch (error) {
       res.status(500).json({ error: "Internal server error" });
     }
   }

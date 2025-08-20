@@ -1,5 +1,4 @@
 const { UseCase } = require("../base");
-const { parsePagination } = require("../../utils/pagination");
 
 class ListUsersUseCase extends UseCase {
   constructor(repos) {
@@ -8,7 +7,11 @@ class ListUsersUseCase extends UseCase {
   }
 
   async apply(input) {
-    const { page, pageSize, skip, take } = parsePagination(input);
+    // Paginación con tamaño fijo
+    const page = Math.max(1, parseInt(input.page, 10) || 1);
+    const pageSize = 20; // Constante fija
+    const skip = (page - 1) * pageSize;
+    const take = pageSize;
     
     const { data, total } = await this.repos.users.paginate({ skip, take });
     
