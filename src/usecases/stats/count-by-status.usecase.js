@@ -1,5 +1,6 @@
 const { UseCase } = require("../base");
 const { VALID_TICKET_STATUSES } = require("../../constants/enums");
+const { applyDateFilter } = require("../../utils/query-helpers");
 
 class CountByStatusUseCase extends UseCase {
   constructor(repos) {
@@ -8,29 +9,9 @@ class CountByStatusUseCase extends UseCase {
   }
 
   async apply(input) {
-    // Construir filtros WHERE para fechas
+    // Construir filtros WHERE para fechas usando helper
     const where = {};
-    
-    // Validar y construir filtros de fecha
-    if (input.from || input.to) {
-      where.createdAt = {};
-      
-      if (input.from) {
-        const fromDate = new Date(input.from);
-        if (isNaN(fromDate.getTime())) {
-          throw new Error("Invalid date format");
-        }
-        where.createdAt.gte = fromDate;
-      }
-      
-      if (input.to) {
-        const toDate = new Date(input.to);
-        if (isNaN(toDate.getTime())) {
-          throw new Error("Invalid date format");
-        }
-        where.createdAt.lte = toDate;
-      }
-    }
+    applyDateFilter(where, input); // Aplica validación consistente
 
     // Obtener conteos por status
     const rawCounts = await this.repos.tickets.countByStatus(where);
