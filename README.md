@@ -118,3 +118,28 @@ Persistencia con SQLite + Prisma.
 Arquitectura en capas: controllers, use-cases, repositories.
 
 40 tests unitarios en verde desarrollados con TDD.
+
+## ⚙️ Variables de Entorno
+
+### CORS Configuration
+
+Por defecto, la API acepta requests desde:
+- `http://localhost:3000` 
+- `http://localhost:3001`
+- `http://127.0.0.1:3000`
+
+Para configurar origins adicionales en producción:
+
+```bash
+export ALLOWED_ORIGINS="https://mi-frontend.com,https://admin.mi-app.com"
+```
+
+O en Windows:
+```cmd
+set ALLOWED_ORIGINS=https://mi-frontend.com,https://admin.mi-app.com
+```
+
+La configuración CORS permite:
+- **Methods**: GET, POST, PUT, DELETE, OPTIONS
+- **Headers**: Content-Type, Authorization  
+- **Credentials**: Habilitado para cookies/auth

@@ -3,3 +3,10 @@ db:
   sqlite_path: "./data/app.sqlite"
 features:
   stats: true
+cors:
+  # Configurar origins permitidos vía ALLOWED_ORIGINS env var
+  # Ejemplo: ALLOWED_ORIGINS="http://localhost:3000,http://localhost:3001,https://mi-frontend.com"
+  default_origins:
+    - "http://localhost:3000"
+    - "http://localhost:3001" 
+    - "http://127.0.0.1:3000"
