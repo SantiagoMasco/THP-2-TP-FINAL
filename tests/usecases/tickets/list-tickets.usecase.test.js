@@ -7,7 +7,7 @@ describe("ListTicketsUseCase", () => {
   beforeEach(() => {
     mockRepos = {
       tickets: {
-        list: jest.fn(),
+        findMany: jest.fn(),
         count: jest.fn()
       }
     };
@@ -22,12 +22,12 @@ describe("ListTicketsUseCase", () => {
     ];
     const total = 2;
 
-    mockRepos.tickets.list.mockResolvedValue(tickets);
+    mockRepos.tickets.findMany.mockResolvedValue(tickets);
     mockRepos.tickets.count.mockResolvedValue(total);
 
     const result = await usecase.apply(input);
 
-    expect(mockRepos.tickets.list).toHaveBeenCalledWith({
+    expect(mockRepos.tickets.findMany).toHaveBeenCalledWith({
       where: {},
       skip: 0,
       take: 20
@@ -61,7 +61,7 @@ describe("ListTicketsUseCase", () => {
       category: "bug"
     };
 
-    expect(mockRepos.tickets.list).toHaveBeenCalledWith({
+    expect(mockRepos.tickets.findMany).toHaveBeenCalledWith({
       where: expectedWhere,
       skip: 0,
       take: 20
@@ -85,7 +85,7 @@ describe("ListTicketsUseCase", () => {
       createdByUserId: 1
     };
 
-    expect(mockRepos.tickets.list).toHaveBeenCalledWith({
+    expect(mockRepos.tickets.findMany).toHaveBeenCalledWith({
       where: expectedWhere,
       skip: 0,
       take: 20
@@ -110,7 +110,7 @@ describe("ListTicketsUseCase", () => {
       }
     };
 
-    expect(mockRepos.tickets.list).toHaveBeenCalledWith({
+    expect(mockRepos.tickets.findMany).toHaveBeenCalledWith({
       where: expectedWhere,
       skip: 0,
       take: 20
@@ -137,7 +137,7 @@ describe("ListTicketsUseCase", () => {
       }
     };
 
-    expect(mockRepos.tickets.list).toHaveBeenCalledWith({
+    expect(mockRepos.tickets.findMany).toHaveBeenCalledWith({
       where: expectedWhere,
       skip: 0,
       take: 20

@@ -7,7 +7,7 @@ describe("Date Validation Consistency", () => {
   beforeEach(() => {
     mockRepos = {
       tickets: {
-        list: jest.fn(),
+        findMany: jest.fn(),
         count: jest.fn(),
         countByStatus: jest.fn()
       }
@@ -51,7 +51,7 @@ describe("Date Validation Consistency", () => {
       const listUseCase = new ListTicketsUseCase(mockRepos);
       const countUseCase = new CountByStatusUseCase(mockRepos);
       
-      mockRepos.tickets.list.mockResolvedValue([]);
+      mockRepos.tickets.findMany.mockResolvedValue([]);
       mockRepos.tickets.count.mockResolvedValue(0);
       mockRepos.tickets.countByStatus.mockResolvedValue({});
 
@@ -69,7 +69,7 @@ describe("Date Validation Consistency", () => {
       const listUseCase = new ListTicketsUseCase(mockRepos);
       const countUseCase = new CountByStatusUseCase(mockRepos);
       
-      mockRepos.tickets.list.mockResolvedValue([]);
+      mockRepos.tickets.findMany.mockResolvedValue([]);
       mockRepos.tickets.count.mockResolvedValue(0);
       mockRepos.tickets.countByStatus.mockResolvedValue({});
 

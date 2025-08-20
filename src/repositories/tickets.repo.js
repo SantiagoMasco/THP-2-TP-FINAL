@@ -48,23 +48,16 @@ class TicketsRepository {
     return { success: true };
   }
 
-  async list({ where, skip, take }) {
-    return await prisma.ticket.findMany({
-      where,
-      skip,
-      take,
-      orderBy: { createdAt: 'desc' },
-      include: {
-        createdBy: true,
-        assignedTo: true
-      }
-    });
-  }
-
   async findMany({ where, orderBy, skip, take }) {
+    // OrderBy compuesto por defecto optimizado para índices
+    const defaultOrderBy = [
+      { createdAt: 'desc' },
+      { id: 'desc' }
+    ];
+
     return await prisma.ticket.findMany({
       where,
-      orderBy,
+      orderBy: orderBy || defaultOrderBy,
       skip,
       take,
       include: {

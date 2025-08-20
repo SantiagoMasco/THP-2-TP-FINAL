@@ -27,7 +27,7 @@ class ListTicketsUseCase extends UseCase {
     applyDateFilter(where, input);
 
     const [data, total] = await Promise.all([
-      this.repos.tickets.list({ where, skip, take }),
+      this.repos.tickets.findMany({ where, skip, take }), // Usa orderBy compuesto por defecto
       this.repos.tickets.count(where)
     ]);
     
