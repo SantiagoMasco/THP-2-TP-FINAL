@@ -5,6 +5,7 @@ const { GetUserUseCase } = require("../usecases/users/get-user.usecase");
 const { ListUsersUseCase } = require("../usecases/users/list-users.usecase");
 const { UpdateUserUseCase } = require("../usecases/users/update-user.usecase");
 const { DeactivateUserUseCase } = require("../usecases/users/deactivate-user.usecase");
+const { GetUserTicketsUseCase } = require("../usecases/users/get-user-tickets.usecase");
 const { 
   validateId, 
   validateRole, 
@@ -145,51 +146,24 @@ class UsersController {
       const { userId } = req.params;
       const { page, pageSize, scope, status } = req.query;
 
-      // Validaciones usando validators centralizados
+      // Validaciones de entrada usando validators centralizados
       const validatedUserId = validateId(userId, 'userId');
       const pageNum = parsePage(page);
       const pageSizeNum = parsePageSize(pageSize, 20, 50);
       const scopeValue = validateScope(scope) || "assigned";
       if (status) validateStatus(status);
 
-      // Construir filtros WHERE según scope
-      const where = {};
-      if (scopeValue === "assigned") {
-        where.assignedUserId = validatedUserId;
-      } else { // scope === "created"
-        where.createdByUserId = validatedUserId;
-      }
-
-      // Agregar filtro de status si se proporciona
-      if (status) {
-        where.status = status;
-      }
-
-      // Calcular skip y take
-      const skip = (pageNum - 1) * pageSizeNum;
-      const take = pageSizeNum + 1; // +1 para detectar hasNext
-
-      // Buscar tickets con ordenamiento
-      const tickets = await repos.tickets.findMany({
-        where,
-        orderBy: [
-          { createdAt: 'desc' },
-          { id: 'desc' }
-        ],
-        skip,
-        take
-      });
-
-      // Determinar hasNext y ajustar data
-      const hasNext = tickets.length > pageSizeNum;
-      const data = hasNext ? tickets.slice(0, pageSizeNum) : tickets;
-
-      res.json({
-        data,
+      // Delegar toda la lógica de negocio al UseCase
+      const usecase = new GetUserTicketsUseCase(repos);
+      const result = await usecase.apply({
+        userId: validatedUserId,
         page: pageNum,
         pageSize: pageSizeNum,
-        hasNext
+        scope: scopeValue,
+        status
       });
+
+      res.json(result);
     } catch (error) {
       // Manejar errores de validación
       if (error.message && (
