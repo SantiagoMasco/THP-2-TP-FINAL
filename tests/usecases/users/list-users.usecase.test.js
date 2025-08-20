@@ -1,7 +1,4 @@
 const { ListUsersUseCase } = require("../../../src/usecases/users/list-users.usecase");
-const { parsePagination } = require("../../../src/utils/pagination");
-
-jest.mock("../../../src/utils/pagination");
 
 describe("ListUsersUseCase", () => {
   let usecase;
@@ -17,41 +14,37 @@ describe("ListUsersUseCase", () => {
   });
 
   it("lista usuarios con paginación", async () => {
-    const input = { page: "2", pageSize: "5" };
-    const paginationData = { page: 2, pageSize: 5, skip: 5, take: 5 };
+    const input = { page: "2" };
     const users = [
       { id: 1, name: "User 1" },
       { id: 2, name: "User 2" }
     ];
-    const total = 20;
+    const total = 40;
 
-    parsePagination.mockReturnValue(paginationData);
     mockRepos.users.paginate.mockResolvedValue({ data: users, total });
 
     const result = await usecase.apply(input);
 
-    expect(parsePagination).toHaveBeenCalledWith(input);
-    expect(mockRepos.users.paginate).toHaveBeenCalledWith({ skip: 5, take: 5 });
+    expect(mockRepos.users.paginate).toHaveBeenCalledWith({ skip: 20, take: 20 });
     expect(result).toEqual({
       data: users,
       page: 2,
-      pageSize: 5,
-      total: 20,
-      totalPages: 4
+      pageSize: 20,
+      total: 40,
+      totalPages: 2
     });
   });
 
   it("usa valores por defecto para paginación", async () => {
     const input = {};
-    const paginationData = { page: 1, pageSize: 20, skip: 0, take: 20 };
     const users = [];
     const total = 0;
 
-    parsePagination.mockReturnValue(paginationData);
     mockRepos.users.paginate.mockResolvedValue({ data: users, total });
 
     const result = await usecase.apply(input);
 
+    expect(mockRepos.users.paginate).toHaveBeenCalledWith({ skip: 0, take: 20 });
     expect(result).toEqual({
       data: users,
       page: 1,

@@ -30,8 +30,8 @@ Lista usuarios con paginación.
 # Listar todos (página 1, 20 por página por defecto)
 curl http://localhost:3000/users
 
-# Con paginación personalizada
-curl "http://localhost:3000/users?page=2&pageSize=10"
+# Con paginación (pageSize fijo de 20)
+curl "http://localhost:3000/users?page=2"
 ```
 
 Response:
@@ -110,8 +110,8 @@ Lista tickets con filtros y paginación.
 # Listar todos (página 1, 20 por página por defecto)
 curl http://localhost:3000/tickets
 
-# Con filtros
-curl "http://localhost:3000/tickets?status=open&priority=high&page=1&pageSize=10"
+# Con filtros (pageSize fijo de 20)
+curl "http://localhost:3000/tickets?status=open&priority=high&page=1"
 
 # Filtros por usuario
 curl "http://localhost:3000/tickets?assignedUserId=1&createdByUserId=2"
@@ -221,8 +221,7 @@ curl -X DELETE http://localhost:3000/tickets/1
 - `createdByUserId`: ID del usuario creador
 - `from`: Fecha de inicio (YYYY-MM-DD)
 - `to`: Fecha de fin (YYYY-MM-DD)
-- `page`: Número de página
-- `pageSize`: Elementos por página
+- `page`: Número de página (pageSize fijo de 20)
 
 ## Estadísticas
 

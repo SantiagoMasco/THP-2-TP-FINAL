@@ -5,7 +5,6 @@ describe("config YAML loader", () => {
     const cfg = getConfig();
     expect(cfg.port).toBe(3000);
     expect(cfg.db.sqlite_path).toBe("./data/app.sqlite");
-    expect(cfg.pagination.defaultPageSize).toBe(20);
-    expect(cfg.pagination.maxPageSize).toBe(100);
+    expect(cfg.features.stats).toBe(true);
   });
 });

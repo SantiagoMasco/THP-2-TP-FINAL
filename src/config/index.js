@@ -5,7 +5,6 @@ const { parse } = require("yaml");
 const DEFAULTS = {
   port: 3000,
   db: { sqlite_path: "./data/app.sqlite" },
-  pagination: { defaultPageSize: 20, maxPageSize: 100 },
   features: { stats: true },
 };
 
