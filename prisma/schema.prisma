@@ -41,3 +41,11 @@ model Ticket {
   @@index([assignedUserId, createdAt, id])
   @@index([createdByUserId, createdAt, id])
 }
+
+// Round-robin: elegimos siempre el siguiente AGENT (circular),
+// usando AppSettings.lastAssignedAgentId para recordar el último asignado.
+model AppSettings {
+  id                   Int      @id @default(autoincrement())
+  lastAssignedAgentId  Int?
+  updatedAt           DateTime @updatedAt
+}

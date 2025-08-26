@@ -148,6 +148,14 @@ class UsersController {
 
       // Validaciones de entrada usando validators centralizados
       const validatedUserId = validateId(userId, 'userId');
+      
+      // VERIFICAR PERMISOS ANTES DE CONSULTAR DB
+      if (req.user.role !== 'ADMIN' && req.user.id !== validatedUserId) {
+        return res.status(403).json({ 
+          error: 'No tienes permisos para ver tickets de este usuario' 
+        });
+      }
+
       const pageNum = parsePage(page);
       const pageSizeNum = parsePageSize(pageSize, 20, 50);
       const scopeValue = validateScope(scope) || "assigned";
