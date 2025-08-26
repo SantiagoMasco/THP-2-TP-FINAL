@@ -1,5 +1,6 @@
 const { Router } = require("express");
 const { TicketsController } = require("../controllers/tickets.controller");
+const { requireAuth } = require("../middleware/auth");
 
 const router = Router();
 const controller = new TicketsController();
@@ -7,8 +8,8 @@ const controller = new TicketsController();
 // GET /tickets - Listar tickets con filtros y paginación
 router.get("/", controller.list.bind(controller));
 
-// POST /tickets - Crear ticket
-router.post("/", controller.create.bind(controller));
+// POST /tickets - Crear ticket (requiere autenticación)
+router.post("/", requireAuth, controller.create.bind(controller));
 
 // GET /tickets/:id - Obtener ticket por ID
 router.get("/:id", controller.get.bind(controller));

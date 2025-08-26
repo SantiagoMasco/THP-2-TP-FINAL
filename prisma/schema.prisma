@@ -49,3 +49,4 @@ model AppSettings {
   lastAssignedAgentId  Int?
   updatedAt           DateTime @updatedAt
 }
+

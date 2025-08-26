@@ -143,3 +143,108 @@ La configuración CORS permite:
 - **Methods**: GET, POST, PUT, DELETE, OPTIONS
 - **Headers**: Content-Type, Authorization  
 - **Credentials**: Habilitado para cookies/auth
+
+## 🔐 Sistema de Autenticación 
+
+### Roles de Usuario
+- **USER**: Usuarios normales que pueden crear tickets
+- **AGENT**: Agentes que reciben tickets asignados automáticamente  
+- **ADMIN**: Administradores con permisos completos
+
+### Endpoints de Autenticación
+
+#### Registro
+```bash
+POST /api/auth/signup
+Content-Type: application/json
+
+{
+  "email": "usuario@ejemplo.com",
+  "password": "mi-password"
+}
+```
+
+#### Login
+```bash
+POST /api/auth/login
+Content-Type: application/json
+
+{
+  "email": "usuario@ejemplo.com", 
+  "password": "mi-password"
+}
+```
+
+**Respuesta:**
+```json
+{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "user": {
+    "id": 1,
+    "email": "usuario@ejemplo.com",
+    "role": "USER"
+  }
+}
+```
+
+### 🎫 Auto-asignación de Tickets
+
+Los tickets se asignan automáticamente a AGENTs usando **round-robin determinista**:
+
+```bash
+POST /api/tickets
+Authorization: Bearer <jwt-token>
+Content-Type: application/json
+
+{
+  "title": "No puedo acceder a mi cuenta",
+  "body": "Descripción del problema"
+}
+```
+
+**Características:**
+- ✅ **Creador automático**: Usa `req.user.id` del token JWT
+- ✅ **Auto-asignación**: Rota entre AGENTs activos por orden de ID
+- ✅ **Sin agentes**: Si no hay AGENTs, `assignedUserId = null`
+- ✅ **Status inicial**: `'open'` (minúsculas)
+- ✅ **Persistente**: El puntero de rotación sobrevive reinicios del servidor
+
+### 👥 Permisos de Acceso
+
+#### GET /api/users/:userId/tickets
+- ✅ **USER**: Solo puede ver sus propios tickets  
+- ✅ **AGENT**: Solo puede ver sus propios tickets
+- ✅ **ADMIN**: Puede ver tickets de cualquier usuario
+
+```bash
+GET /api/users/123/tickets
+Authorization: Bearer <jwt-token>
+```
+
+### Variables de Entorno Requeridas
+
+```bash
+# .env
+DATABASE_URL="file:./data/app.sqlite"
+JWT_SECRET="your-super-secret-jwt-key-change-in-production"
+```
+
+### 🚀 Comandos de Desarrollo
+
+```bash
+
+# Instalar dependencias (si no las tienes)
+npm install
+
+# Desarrollo con auto-reload + migración automática
+npm run dev
+
+# Solo aplicar cambios de schema
+npm run db:push
+
+# Ejecutar tests
+npm test
+
+# Producción
+npm start
+```

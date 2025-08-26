@@ -1,5 +1,6 @@
 const { UsersRepository } = require("../repositories/users.repo");
 const { TicketsRepository } = require("../repositories/tickets.repo");
+const { SettingsRepository } = require("../repositories/settings.repo");
 const { CreateTicketUseCase } = require("../usecases/tickets/create-ticket.usecase");
 const { GetTicketUseCase } = require("../usecases/tickets/get-ticket.usecase");
 const { ListTicketsUseCase } = require("../usecases/tickets/list-tickets.usecase");
@@ -15,33 +16,32 @@ const {
 
 const repos = {
   users: new UsersRepository(),
-  tickets: new TicketsRepository()
+  tickets: new TicketsRepository(),
+  settings: new SettingsRepository()
 };
 
 class TicketsController {
   async create(req, res) {
     try {
-      const { title, description, createdByUserId, assignedUserId, priority, category } = req.body;
+      const { title, body, priority, category } = req.body;
 
       // Validaciones usando validators centralizados
       validateRequiredString(title, 'title');
-      const validatedCreatedByUserId = validateId(createdByUserId, 'createdByUserId');
-      if (assignedUserId) validateOptionalNumber(assignedUserId, 'assignedUserId');
-      validatePriority(priority);
+      validateRequiredString(body, 'body');
+      if (priority) validatePriority(priority);
 
       const usecase = new CreateTicketUseCase(repos);
       const ticket = await usecase.apply({ 
         title, 
-        description, 
-        createdByUserId: validatedCreatedByUserId, 
-        assignedUserId, 
+        description: body, // Mapear body -> description internamente
+        createdByUserId: req.user.id, // Usar req.user.id del middleware auth
         priority, 
         category 
       });
       
       res.status(201).json(ticket);
     } catch (error) {
-      if (error.message === "CreatedBy user not found" || error.message === "Assigned user not found") {
+      if (error.message === "CreatedBy user not found") {
         return res.status(404).json({ error: error.message });
       }
       // Manejar errores de validación

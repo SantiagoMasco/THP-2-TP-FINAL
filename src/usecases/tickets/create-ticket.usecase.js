@@ -13,16 +13,20 @@ class CreateTicketUseCase extends UseCase {
       throw new Error("CreatedBy user not found");
     }
 
-    // Validar que el usuario asignado existe (si se proporciona)
-    if (input.assignedUserId) {
-      const assignedUser = await this.repos.users.findById(input.assignedUserId);
-      if (!assignedUser) {
-        throw new Error("Assigned user not found");
-      }
-    }
+    // Auto-asignación round-robin a un AGENT
+    const nextAgent = await this.repos.settings.getNextAgent();
+    const assignedUserId = nextAgent ? nextAgent.id : null;
 
-    // Crear ticket
-    return await this.repos.tickets.create(input);
+    // Crear ticket con auto-asignación y status inicial
+    const ticketData = {
+      ...input,
+      assignedUserId,
+      status: 'open' // Status inicial en minúsculas
+    };
+
+    const ticket = await this.repos.tickets.create(ticketData);
+    
+    return ticket;
   }
 }
 
