@@ -5,6 +5,7 @@ const health = require("./routes/health.routes");
 const users = require("./routes/users.routes");
 const tickets = require("./routes/tickets.routes");
 const stats = require("./routes/stats.routes");
+const auth = require("./routes/auth.routes");
 
 const app = express();
 
@@ -37,5 +38,6 @@ app.use("/health", health);
 app.use("/users", users);
 app.use("/tickets", tickets);
 app.use("/stats", stats);
+app.use("/api/auth", auth);
 
 module.exports = app;

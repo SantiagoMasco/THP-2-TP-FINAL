@@ -19,6 +19,7 @@ class UsersRepository {
       data: {
         name: data.name,
         email: data.email,
+        password: data.password, // Agregar soporte para password
         role: data.role || DEFAULT_USER_ROLE,
         active: data.active !== undefined ? data.active : true
       }
@@ -37,7 +38,17 @@ class UsersRepository {
       prisma.user.findMany({
         skip,
         take,
-        orderBy: { createdAt: 'desc' }
+        orderBy: { createdAt: 'desc' },
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          role: true,
+          active: true,
+          createdAt: true,
+          updatedAt: true
+          // No exponer password en listados
+        }
       }),
       prisma.user.count()
     ]);
