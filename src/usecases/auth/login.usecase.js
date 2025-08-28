@@ -49,3 +49,4 @@ class LoginUseCase extends UseCase {
 }
 
 module.exports = { LoginUseCase };
+
