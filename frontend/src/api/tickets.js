@@ -1,4 +1,5 @@
 import { request } from './http.js';
+import { getDefaultUserId } from '../config/env.js';
 
 /**
  * API wrapper para operaciones de tickets
@@ -7,7 +8,7 @@ import { request } from './http.js';
 /**
  * Obtiene los tickets de un usuario específico
  * @param {Object} params - Parámetros de la consulta
- * @param {number} params.userId - ID del usuario
+ * @param {number} [params.userId] - ID del usuario (usa getDefaultUserId() si no se proporciona)
  * @param {number} [params.page=1] - Número de página
  * @param {number} [params.pageSize=20] - Tamaño de página (máximo 50)
  * @param {string} [params.scope='assigned'] - Scope de tickets ('assigned' | 'created')
@@ -16,17 +17,12 @@ import { request } from './http.js';
  */
 export const getUserTickets = async (params = {}) => {
   const {
-    userId,
+    userId = getDefaultUserId(),
     page = 1,
     pageSize = 20,
     scope = 'assigned',
     status
   } = params;
-
-  // Validar parámetros requeridos
-  if (!userId) {
-    throw new Error('userId es requerido');
-  }
 
   // Construir parámetros de query
   const queryParams = {
@@ -35,8 +31,8 @@ export const getUserTickets = async (params = {}) => {
     scope
   };
 
-  // Agregar status solo si se proporciona
-  if (status) {
+  // Agregar status solo si se proporciona y no está vacío
+  if (typeof status === 'string' && status.trim() !== '') {
     queryParams.status = status;
   }
 
