@@ -22,9 +22,9 @@ export const Pagination = ({
   const [goToPage, setGoToPage] = useState('');
 
   const handleGoToPage = () => {
-    const pageNum = parseInt(goToPage);
-    if (pageNum && pageNum > 0) {
-      onGoToPage(pageNum);
+    const n = Math.max(1, parseInt(goToPage, 10) || 0);
+    if (n >= 1) {
+      onGoToPage(n);
       setGoToPage('');
     }
   };

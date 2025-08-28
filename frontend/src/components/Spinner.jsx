@@ -1,11 +1,9 @@
 /**
  * Componente de carga con spinner animado
  */
-export const Spinner = () => {
-  return (
-    <div className="spinner-container">
-      <div className="spinner"></div>
-      <p>Cargando tickets...</p>
-    </div>
-  );
-};
+export const Spinner = () => (
+  <div className="spinner-container" role="status" aria-live="polite">
+    <div className="spinner" aria-hidden="true"></div>
+    <p>Cargando tickets...</p>
+  </div>
+);
