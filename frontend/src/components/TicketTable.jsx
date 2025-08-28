@@ -6,18 +6,16 @@ import { EmptyState } from './EmptyState.jsx';
  * @param {Function} onSelect - Callback cuando se selecciona un ticket
  */
 
-// Función auxiliar para formatear fecha
-const formatDate = (dateString) => {
-  if (!dateString) return '-';
-  const date = new Date(dateString);
-  return date.toLocaleDateString('es-ES', {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit'
-  });
-};
+// Formateador de fecha reutilizable (evita recrear por fila)
+const dtf = new Intl.DateTimeFormat('es-AR', {
+  year: 'numeric',
+  month: 'short',
+  day: 'numeric',
+  hour: '2-digit',
+  minute: '2-digit'
+});
+
+const formatDate = (iso) => (iso ? dtf.format(new Date(iso)) : '-');
 
 // Función auxiliar para obtener clase CSS del status
 const getStatusClass = (status) => {
@@ -31,42 +29,40 @@ const getStatusClass = (status) => {
 };
 
 export const TicketTable = ({ items, onSelect }) => {
-  if (!items || items.length === 0) {
-    return <EmptyState />;
-  }
+  if (!items || items.length === 0) return <EmptyState />;
 
   return (
     <div className="table-container">
       <table className="ticket-table">
         <thead>
           <tr>
-            <th>ID</th>
-            <th>Título</th>
-            <th>Estado</th>
-            <th>Prioridad</th>
-            <th>Creado por</th>
-            <th>Asignado a</th>
-            <th>Fecha</th>
+            <th scope="col">ID</th>
+            <th scope="col">Título</th>
+            <th scope="col">Estado</th>
+            <th scope="col">Prioridad</th>
+            <th scope="col">Creado por</th>
+            <th scope="col">Asignado a</th>
+            <th scope="col">Fecha</th>
           </tr>
         </thead>
         <tbody>
-          {items.map((ticket) => (
+          {items.map((t) => (
             <tr
-              key={ticket.id}
-              onClick={() => onSelect && onSelect(ticket)}
+              key={t.id}
+              onClick={() => onSelect?.(t)}
               className={onSelect ? 'clickable' : ''}
             >
-              <td>#{ticket.id}</td>
-              <td className="ticket-title">{ticket.title}</td>
+              <td>#{t.id}</td>
+              <td className="ticket-title" title={t.title}>{t.title}</td>
               <td>
-                <span className={`status-badge ${getStatusClass(ticket.status)}`}>
-                  {ticket.status}
+                <span className={`status-badge ${getStatusClass(t.status)}`}>
+                  {t.status}
                 </span>
               </td>
-              <td>{ticket.priority || '-'}</td>
-              <td>{ticket.createdBy?.name || '-'}</td>
-              <td>{ticket.assignedTo?.name || '-'}</td>
-              <td>{formatDate(ticket.createdAt)}</td>
+              <td>{t.priority || '-'}</td>
+              <td>{t.createdBy?.name || t.createdBy?.email || '-'}</td>
+              <td>{t.assignedTo?.name || t.assignedTo?.email || '-'}</td>
+              <td>{formatDate(t.createdAt)}</td>
             </tr>
           ))}
         </tbody>
