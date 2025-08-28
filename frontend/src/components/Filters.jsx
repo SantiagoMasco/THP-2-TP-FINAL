@@ -6,14 +6,20 @@
  * @param {Function} onChangeStatus - Callback para cambiar status
  */
 export const Filters = ({ scope, status, onChangeScope, onChangeStatus }) => {
+  const handleScope = (v) => {
+    onChangeScope(v);
+    onChangeStatus(''); // resetear a "Todos"
+  };
+
   return (
     <div className="filters">
       <div className="filter-group">
         <label htmlFor="scope-filter">Mostrar:</label>
         <select
           id="scope-filter"
+          aria-label="Filtro de alcance"
           value={scope}
-          onChange={(e) => onChangeScope(e.target.value)}
+          onChange={(e) => handleScope(e.target.value)}
         >
           <option value="assigned">Asignados a mí</option>
           <option value="created">Creados por mí</option>
@@ -24,6 +30,7 @@ export const Filters = ({ scope, status, onChangeScope, onChangeStatus }) => {
         <label htmlFor="status-filter">Estado:</label>
         <select
           id="status-filter"
+          aria-label="Filtro de estado"
           value={status}
           onChange={(e) => onChangeStatus(e.target.value)}
         >
