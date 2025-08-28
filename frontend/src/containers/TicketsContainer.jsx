@@ -33,10 +33,12 @@ export const TicketsContainer = () => {
   // Handlers para filtros
   const handleScopeChange = (newScope) => {
     setScope(newScope);
+    setPage(1); // resetear a página 1 al cambiar filtros
   };
 
   const handleStatusChange = (newStatus) => {
     setStatus(newStatus);
+    setPage(1); // resetear a página 1 al cambiar filtros
   };
 
   // Handlers para paginación
