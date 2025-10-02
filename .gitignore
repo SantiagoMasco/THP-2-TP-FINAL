@@ -7,6 +7,10 @@ logs/
 .env
 .env.*
 
+# Prisma generated clients
+/src/generated/
+/prisma/generated/
+
 # SQLite / prisma
 data/
 *.sqlite*

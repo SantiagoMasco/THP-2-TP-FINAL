@@ -1,0 +1,19 @@
+datasource db {
+  provider = "mongodb"
+  url      = env("MONGODB_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+  // Generar un cliente separado para Mongo dentro de src:
+  output   = "../src/generated/mongo"
+}
+
+// Definimos un único modelo de prueba para este paso
+model User {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  email     String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

@@ -227,7 +227,33 @@ Authorization: Bearer <jwt-token>
 # .env
 DATABASE_URL="file:./data/app.sqlite"
 JWT_SECRET="your-super-secret-jwt-key-change-in-production"
+MONGODB_URL="mongodb+srv://<user>:<pass>@<cluster>.mongodb.net/<db>?retryWrites=true&w=majority"
 ```
+
+## 🍃 MongoDB Setup (Paralelo)
+
+### Configuración de MongoDB
+
+1. **Configurar variable de entorno:**
+   ```bash
+   # En .env agregar:
+   MONGODB_URL="mongodb+srv://<user>:<pass>@<cluster>.mongodb.net/<db>?retryWrites=true&w=majority"
+   ```
+
+2. **Generar cliente Prisma para MongoDB:**
+   ```bash
+   npm run prisma:generate:mongo
+   ```
+
+3. **Verificar conexión:**
+   ```bash
+   GET http://localhost:3000/health/mongo
+   ```
+   
+   **Respuesta esperada:**
+   ```json
+   { "ok": true, "mongo": "up" }
+   ```
 
 ### 🚀 Comandos de Desarrollo
 

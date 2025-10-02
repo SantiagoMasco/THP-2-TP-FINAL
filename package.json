@@ -8,7 +8,8 @@
     "start": "node src/server.js",
     "test": "node --experimental-vm-modules ./node_modules/jest/bin/jest.js",
     "test:watch": "npm test -- --watch",
-    "db:push": "prisma db push"
+    "db:push": "prisma db push",
+    "prisma:generate:mongo": "prisma generate --schema=prisma/schema.mongo.prisma"
   },
   "dependencies": {
     "@prisma/client": "^5",
