@@ -255,6 +255,144 @@ MONGODB_URL="mongodb+srv://<user>:<pass>@<cluster>.mongodb.net/<db>?retryWrites=
    { "ok": true, "mongo": "up" }
    ```
 
+## 🔧 CRUD User Mongo
+
+### Endpoints disponibles:
+
+**Crear usuario:**
+```bash
+curl -X POST http://localhost:3000/mongo/users -H "Content-Type: application/json" -d '{"name":"Alice","email":"alice@test.com"}'
+```
+
+**Listar usuarios:**
+```bash
+curl http://localhost:3000/mongo/users
+```
+
+**Actualizar usuario:**
+```bash
+curl -X PUT http://localhost:3000/mongo/users/<id> -H "Content-Type: application/json" -d '{"name":"Updated"}'
+```
+
+**Eliminar usuario:**
+```bash
+curl -X DELETE http://localhost:3000/mongo/users/<id>
+```
+
+## 📊 Modelos en MongoDB
+
+### Modelos disponibles:
+
+1. **User** - Usuarios del sistema
+2. **Ticket** - Tickets de soporte
+3. **AppSettings** - Configuraciones de la aplicación
+4. **Product** - Productos del catálogo
+5. **Order** - Órdenes de compra
+
+### Relaciones:
+
+Las relaciones se manejan vía `ObjectId` (`userId`, `productId`). Prisma en MongoDB no soporta joins nativos, solo referencias manuales.
+
+- `Ticket.userId` → referencia a `User.id`
+- `Order.userId` → referencia a `User.id`
+- `Order.productId` → referencia a `Product.id`
+
+## 🎫 CRUD Ticket Mongo
+
+### Endpoints disponibles:
+
+**Crear ticket:**
+```bash
+curl -X POST http://localhost:3000/mongo/tickets -H "Content-Type: application/json" -d '{"title":"Soporte técnico","userId":"<UserId>"}'
+```
+
+**Listar tickets:**
+```bash
+curl http://localhost:3000/mongo/tickets
+```
+
+**Actualizar ticket:**
+```bash
+curl -X PUT http://localhost:3000/mongo/tickets/<id> -H "Content-Type: application/json" -d '{"title":"Nuevo título"}'
+```
+
+**Eliminar ticket:**
+```bash
+curl -X DELETE http://localhost:3000/mongo/tickets/<id>
+```
+
+## ⚙️ CRUD AppSettings Mongo
+
+### Endpoints disponibles:
+
+**Crear configuración:**
+```bash
+curl -X POST http://localhost:3000/mongo/settings -H "Content-Type: application/json" -d '{"key":"theme","value":"dark"}'
+```
+
+**Listar configuraciones:**
+```bash
+curl http://localhost:3000/mongo/settings
+```
+
+**Actualizar configuración:**
+```bash
+curl -X PUT http://localhost:3000/mongo/settings/<id> -H "Content-Type: application/json" -d '{"value":"light"}'
+```
+
+**Eliminar configuración:**
+```bash
+curl -X DELETE http://localhost:3000/mongo/settings/<id>
+```
+
+## 🛒 CRUD Product Mongo
+
+### Endpoints disponibles:
+
+**Crear producto:**
+```bash
+curl -X POST http://localhost:3000/mongo/products -H "Content-Type: application/json" -d '{"name":"Laptop","price":1200}'
+```
+
+**Listar productos:**
+```bash
+curl http://localhost:3000/mongo/products
+```
+
+**Actualizar producto:**
+```bash
+curl -X PUT http://localhost:3000/mongo/products/<id> -H "Content-Type: application/json" -d '{"price":999}'
+```
+
+**Eliminar producto:**
+```bash
+curl -X DELETE http://localhost:3000/mongo/products/<id>
+```
+
+## 📦 CRUD Order Mongo
+
+### Endpoints disponibles:
+
+**Crear orden:**
+```bash
+curl -X POST http://localhost:3000/mongo/orders -H "Content-Type: application/json" -d '{"userId":"<UserId>","productId":"<ProductId>"}'
+```
+
+**Listar órdenes:**
+```bash
+curl http://localhost:3000/mongo/orders
+```
+
+**Actualizar orden:**
+```bash
+curl -X PUT http://localhost:3000/mongo/orders/<id> -H "Content-Type: application/json" -d '{"productId":"<AnotherProductId>"}'
+```
+
+**Eliminar orden:**
+```bash
+curl -X DELETE http://localhost:3000/mongo/orders/<id>
+```
+
 ### 🚀 Comandos de Desarrollo
 
 ```bash

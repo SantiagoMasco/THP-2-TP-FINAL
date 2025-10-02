@@ -8,10 +8,9 @@ router.get("/", (req, res) => {
   res.json({ ok: true, uptime });
 });
 
-router.get("/health/mongo", async (req, res) => {
+router.get("/mongo", async (req, res) => {
   try {
-    // Importación dinámica para manejar ES modules en CommonJS
-    const { default: prismaMongo } = await import("../lib/prismaMongo.js");
+    const prismaMongo = require("../lib/prismaMongo");
     await prismaMongo.$runCommandRaw({ ping: 1 });
     res.status(200).json({ ok: true, mongo: "up" });
   } catch (err) {

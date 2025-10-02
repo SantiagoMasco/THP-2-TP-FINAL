@@ -6,6 +6,11 @@ const users = require("./routes/users.routes");
 const tickets = require("./routes/tickets.routes");
 const stats = require("./routes/stats.routes");
 const auth = require("./routes/auth.routes");
+const mongoUserRoutes = require("./routes/mongo.user.routes");
+const mongoTicketRoutes = require("./routes/mongo.ticket.routes");
+const mongoSettingsRoutes = require("./routes/mongo.settings.routes");
+const mongoProductRoutes = require("./routes/mongo.product.routes");
+const mongoOrderRoutes = require("./routes/mongo.order.routes");
 
 const app = express();
 
@@ -39,5 +44,10 @@ app.use("/users", users);
 app.use("/tickets", tickets);
 app.use("/stats", stats);
 app.use("/api/auth", auth);
+app.use("/mongo/users", mongoUserRoutes);
+app.use("/mongo/tickets", mongoTicketRoutes);
+app.use("/mongo/settings", mongoSettingsRoutes);
+app.use("/mongo/products", mongoProductRoutes);
+app.use("/mongo/orders", mongoOrderRoutes);
 
 module.exports = app;
