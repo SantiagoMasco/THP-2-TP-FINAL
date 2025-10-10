@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { useTickets } from '../hooks/useTickets.js';
 import { createTicket, updateTicketStatus } from '../api/tickets.js';
 import { Spinner } from '../components/Spinner.jsx';
@@ -39,65 +39,65 @@ export const TicketsContainer = () => {
   const [creating, setCreating] = useState(false);
   const [createError, setCreateError] = useState('');
 
-  // Handlers para filtros
-  const handleScopeChange = (newScope) => {
+  // Handlers para filtros - optimizados con useCallback
+  const handleScopeChange = useCallback((newScope) => {
     setScope(newScope);
     setPage(1); // resetear a página 1 al cambiar filtros
-  };
+  }, [setScope, setPage]);
 
-  const handleStatusChange = (newStatus) => {
+  const handleStatusChange = useCallback((newStatus) => {
     setStatus(newStatus);
     setPage(1); // resetear a página 1 al cambiar filtros
-  };
+  }, [setStatus, setPage]);
 
-  // Handlers para paginación
-  const handlePrevPage = () => {
+  // Handlers para paginación - optimizados con useCallback
+  const handlePrevPage = useCallback(() => {
     if (page > 1) {
       setPage(page - 1);
     }
-  };
+  }, [page, setPage]);
 
-  const handleNextPage = () => {
+  const handleNextPage = useCallback(() => {
     if (hasNext) {
       setPage(page + 1);
     }
-  };
+  }, [hasNext, setPage]);
 
-  const handlePageSizeChange = (newPageSize) => {
+  const handlePageSizeChange = useCallback((newPageSize) => {
     setPageSize(newPageSize);
     setPage(1); // resetear a página 1 al cambiar tamaño
-  };
+  }, [setPageSize, setPage]);
 
-  const handleGoToPage = (newPage) => {
+  const handleGoToPage = useCallback((newPage) => {
     setPage(newPage);
-  };
+  }, [setPage]);
 
-  // Handler para seleccionar ticket (placeholder por ahora)
-  const handleTicketSelect = (ticket) => {
+  // Handler para seleccionar ticket (placeholder por ahora) - optimizado con useCallback
+  const handleTicketSelect = useCallback((ticket) => {
     console.log('Ticket seleccionado:', ticket);
     // TODO: Implementar navegación o modal de detalle
-  };
+  }, []);
 
-  // Handler para cuando se actualiza el estado de un ticket individual
-  const handleTicketStatusUpdate = (updatedTicket) => {
+  // Handler para cuando se actualiza el estado de un ticket individual - optimizado con useCallback
+  const handleTicketStatusUpdate = useCallback((updatedTicket) => {
     // Forzar refresh para actualizar la lista
     refresh();
-  };
+  }, [refresh]);
 
-  // Handler para abrir el modal
-  const handleOpenModal = () => {
+  // Handler para abrir el modal - optimizado con useCallback
+  const handleOpenModal = useCallback(() => {
     setIsModalOpen(true);
     setCreateError('');
-  };
+  }, []);
 
-  // Handler para cerrar el modal
-  const handleCloseModal = () => {
+  // Handler para cerrar el modal - optimizado con useCallback
+  const handleCloseModal = useCallback(() => {
     setIsModalOpen(false);
     setCreateError('');
-  };
+  }, []);
 
-  // Handler para crear ticket
-  const handleCreate = async (data) => {
+  // Handler para crear ticket - optimizado con useCallback
+  const handleCreate = useCallback(async (data) => {
     setCreating(true);
     setCreateError('');
     
@@ -128,7 +128,7 @@ export const TicketsContainer = () => {
     }
     
     return resultado;
-  };
+  }, [scope, setScope, setPage, refresh]);
 
   return (
     <div className="tickets-container">

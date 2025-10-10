@@ -10,6 +10,7 @@ import React, { useState } from 'react';
 export const CreateTicketForm = ({ onCreate, onCancel, loading }) => {
   const [title, setTitle] = useState('');
   const [body, setBody] = useState('');
+  const [priority, setPriority] = useState('med');
   const [error, setError] = useState('');
 
   const handleSubmit = async (e) => {
@@ -28,24 +29,31 @@ export const CreateTicketForm = ({ onCreate, onCancel, loading }) => {
 
     // Limpiar error y llamar callback
     setError('');
-    const result = await onCreate({ title: title.trim(), body: body.trim() });
+    const result = await onCreate({ 
+      title: title.trim(), 
+      body: body.trim(), 
+      priority: priority 
+    });
     
     // Si se creó exitosamente, limpiar campos
     if (result) {
       setTitle('');
       setBody('');
+      setPriority('med');
     }
   };
 
   const handleReset = () => {
     setTitle('');
     setBody('');
+    setPriority('med');
     setError('');
   };
 
   const handleCancel = () => {
     setTitle('');
     setBody('');
+    setPriority('med');
     setError('');
     if (onCancel) onCancel();
   };
@@ -81,6 +89,26 @@ export const CreateTicketForm = ({ onCreate, onCancel, loading }) => {
           rows={5}
           maxLength={1000}
         />
+      </div>
+
+      <div className="form-group">
+        <label htmlFor="ticket-priority">
+          Prioridad
+        </label>
+        <select
+          id="ticket-priority"
+          value={priority}
+          onChange={(e) => setPriority(e.target.value)}
+          disabled={loading}
+          className="priority-select"
+        >
+          <option value="low">🟢 Baja</option>
+          <option value="med">🟡 Media</option>
+          <option value="high">🔴 Alta</option>
+        </select>
+        <small className="form-help">
+          La prioridad determina la urgencia del ticket
+        </small>
       </div>
 
       {error && (

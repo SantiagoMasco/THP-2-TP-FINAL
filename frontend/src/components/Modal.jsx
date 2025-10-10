@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 
 /**
  * Componente Modal reutilizable
@@ -10,6 +10,8 @@ import React, { useEffect } from 'react';
  * @param {string} [props.size='medium'] - Tamaño del modal ('small', 'medium', 'large')
  */
 export const Modal = ({ isOpen, onClose, title, children, size = 'medium' }) => {
+  const modalRef = useRef(null);
+
   // Cerrar con la tecla ESC
   useEffect(() => {
     const handleEsc = (e) => {
@@ -21,6 +23,13 @@ export const Modal = ({ isOpen, onClose, title, children, size = 'medium' }) => 
     window.addEventListener('keydown', handleEsc);
     return () => window.removeEventListener('keydown', handleEsc);
   }, [isOpen, onClose]);
+
+  // Enfocar el modal cuando se abre para accesibilidad
+  useEffect(() => {
+    if (isOpen && modalRef.current) {
+      modalRef.current.focus();
+    }
+  }, [isOpen]);
 
   // Prevenir scroll del body cuando el modal está abierto
   useEffect(() => {
@@ -48,9 +57,16 @@ export const Modal = ({ isOpen, onClose, title, children, size = 'medium' }) => 
 
   return (
     <div className="modal-backdrop" onClick={handleBackdropClick}>
-      <div className={`modal-content modal-${size}`}>
+      <div 
+        ref={modalRef}
+        className={`modal-content modal-${size}`}
+        tabIndex={-1}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="modal-title"
+      >
         <div className="modal-header">
-          <h2 className="modal-title">{title}</h2>
+          <h2 id="modal-title" className="modal-title">{title}</h2>
           <button 
             className="modal-close" 
             onClick={onClose}
