@@ -42,3 +42,40 @@ export const getUserTickets = async (params = {}) => {
     params: queryParams
   });
 };
+
+/**
+ * Crea un nuevo ticket
+ * @param {Object} data - Datos del ticket a crear
+ * @param {string} data.title - Título del ticket (obligatorio)
+ * @param {string} data.body - Descripción del ticket (obligatorio)
+ * @param {number} [data.userId] - ID del usuario creador (usa getDefaultUserId() si no se proporciona)
+ * @param {string} [data.priority] - Prioridad del ticket ('low' | 'med' | 'high')
+ * @param {string} [data.category] - Categoría del ticket
+ * @returns {Promise<Object>} Ticket creado
+ */
+export const createTicket = async (data) => {
+  const {
+    title,
+    body,
+    userId = getDefaultUserId(),
+    priority,
+    category
+  } = data;
+
+  // Construir body del request
+  const requestBody = {
+    title,
+    body,
+    userId
+  };
+
+  // Agregar campos opcionales si están presentes
+  if (priority) requestBody.priority = priority;
+  if (category) requestBody.category = category;
+
+  // Hacer request al endpoint
+  return await request('/tickets', {
+    method: 'POST',
+    body: requestBody
+  });
+};

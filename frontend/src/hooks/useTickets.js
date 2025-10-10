@@ -17,6 +17,7 @@ export const useTickets = () => {
   const [scope, setScope] = useState('assigned');
   const [status, setStatus] = useState('');
   const [hasNext, setHasNext] = useState(false);
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
 
   // UI
   const [loading, setLoading] = useState(false);
@@ -61,13 +62,13 @@ export const useTickets = () => {
     };
     run();
     return () => ctrl.abort();
-  }, [userId, page, pageSize, scope, status]);
+  }, [userId, page, pageSize, scope, status, refreshTrigger]);
 
   // helpers expuestos
   const setPageSize = (v) => setPageSizeRaw(v);
   const refresh = () => {
-    // fuerza un "cambio" inofensivo para re-disparar el efecto
-    setPage((p) => p); 
+    // Incrementar el trigger para forzar un re-fetch
+    setRefreshTrigger(prev => prev + 1); 
   };
 
   return {
