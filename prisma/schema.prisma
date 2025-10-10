@@ -21,6 +21,16 @@ model User {
   assignedTickets Ticket[] @relation("AssignedTo")
 }
 
+model Product {
+  id        Int      @id @default(autoincrement())
+  name      String
+  price     Float?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  tickets   Ticket[]
+}
+
 model Ticket {
   id          Int       @id @default(autoincrement())
   title       String
@@ -38,8 +48,12 @@ model Ticket {
   assignedUserId Int?
   assignedTo     User? @relation("AssignedTo", fields: [assignedUserId], references: [id])
   
+  productId Int?
+  product   Product? @relation(fields: [productId], references: [id])
+  
   @@index([assignedUserId, createdAt, id])
   @@index([createdByUserId, createdAt, id])
+  @@index([productId])
 }
 
 // Round-robin: elegimos siempre el siguiente AGENT (circular),

@@ -8,8 +8,8 @@ const controller = new TicketsController();
 // GET /tickets - Listar tickets con filtros y paginación
 router.get("/", controller.list.bind(controller));
 
-// POST /tickets - Crear ticket (requiere autenticación)
-router.post("/", requireAuth, controller.create.bind(controller));
+// POST /tickets - Crear ticket (sin auth para desarrollo)
+router.post("/", controller.create.bind(controller));
 
 // GET /tickets/:id - Obtener ticket por ID
 router.get("/:id", controller.get.bind(controller));

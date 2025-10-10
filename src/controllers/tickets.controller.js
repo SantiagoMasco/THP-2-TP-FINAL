@@ -1,6 +1,7 @@
 const { UsersRepository } = require("../repositories/users.repo");
 const { TicketsRepository } = require("../repositories/tickets.repo");
 const { SettingsRepository } = require("../repositories/settings.repo");
+const { ProductsRepository } = require("../repositories/products.repo");
 const { CreateTicketUseCase } = require("../usecases/tickets/create-ticket.usecase");
 const { GetTicketUseCase } = require("../usecases/tickets/get-ticket.usecase");
 const { ListTicketsUseCase } = require("../usecases/tickets/list-tickets.usecase");
@@ -17,31 +18,42 @@ const {
 const repos = {
   users: new UsersRepository(),
   tickets: new TicketsRepository(),
-  settings: new SettingsRepository()
+  settings: new SettingsRepository(),
+  products: new ProductsRepository()
 };
 
 class TicketsController {
   async create(req, res) {
     try {
-      const { title, body, priority, category } = req.body;
+      const { title, body, priority, category, userId, productId } = req.body;
 
       // Validaciones usando validators centralizados
       validateRequiredString(title, 'title');
       validateRequiredString(body, 'body');
       if (priority) validatePriority(priority);
+      if (productId !== undefined && productId !== null) {
+        validateOptionalNumber(productId, 'productId');
+      }
+
+      // Determinar userId: si viene en el body, usarlo; sino usar req.user.id (del middleware auth)
+      const createdByUserId = userId || req.user?.id;
+      if (!createdByUserId) {
+        return res.status(400).json({ error: 'userId is required' });
+      }
 
       const usecase = new CreateTicketUseCase(repos);
       const ticket = await usecase.apply({ 
         title, 
         description: body, // Mapear body -> description internamente
-        createdByUserId: req.user.id, // Usar req.user.id del middleware auth
+        createdByUserId,
         priority, 
-        category 
+        category,
+        productId
       });
       
       res.status(201).json(ticket);
     } catch (error) {
-      if (error.message === "CreatedBy user not found") {
+      if (error.message === "CreatedBy user not found" || error.message === "Product not found") {
         return res.status(404).json({ error: error.message });
       }
       // Manejar errores de validación
