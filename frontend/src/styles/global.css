@@ -91,8 +91,110 @@ body {
 .status-open { background: #d1ecf1; color: #055160; }         /* info */
 .status-progress { background: #fff3cd; color: #664d03; }     /* warning */
 .status-resolved { background: #d4edda; color: #0f5132; }     /* success */
-.status-closed { background: #f8d7da; color: #842029; }       /* danger */
+.status-closed { background: #f8d7da; color: #842029; }       /* danger - red */
 .status-default { background: #e2e3e5; color: #41464b; }      /* secondary */
+
+/* ===== Ticket Status Select ===== */
+.ticket-status-select-container {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.ticket-status-select {
+  padding: 4px 8px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='currentColor' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 4px center;
+  padding-right: 20px;
+}
+
+.ticket-status-select:hover:not(:disabled) {
+  opacity: 0.8;
+  border-color: currentColor;
+}
+
+.ticket-status-select:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.ticket-status-select.loading {
+  opacity: 0.6;
+}
+
+/* Colores específicos para cada estado en el select */
+.ticket-status-select.status-open {
+  background-color: #d1ecf1;
+  color: #055160;
+}
+
+.ticket-status-select.status-progress {
+  background-color: #fff3cd;
+  color: #664d03;
+}
+
+.ticket-status-select.status-resolved {
+  background-color: #d4edda;
+  color: #0f5132;
+}
+
+.ticket-status-select.status-closed {
+  background-color: #f8d7da;
+  color: #842029;
+}
+
+/* Estilos para las opciones del dropdown */
+.ticket-status-select option {
+  padding: 8px;
+  font-weight: 600;
+}
+
+.ticket-status-select option[value="open"] {
+  background-color: #d1ecf1;
+  color: #055160;
+}
+
+.ticket-status-select option[value="in_progress"] {
+  background-color: #fff3cd;
+  color: #664d03;
+}
+
+.ticket-status-select option[value="resolved"] {
+  background-color: #d4edda;
+  color: #0f5132;
+}
+
+.ticket-status-select option[value="closed"] {
+  background-color: #f8d7da;
+  color: #842029;
+}
+
+/* Iconos de feedback */
+.status-loading,
+.status-success,
+.status-error {
+  font-size: 14px;
+  animation: fadeIn 0.2s ease;
+}
+
+.status-success {
+  color: #10b981;
+}
+
+.status-error {
+  color: #ef4444;
+  cursor: help;
+}
 
 /* ===== Pagination ===== */
 .pagination {

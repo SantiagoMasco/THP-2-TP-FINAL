@@ -79,3 +79,16 @@ export const createTicket = async (data) => {
     body: requestBody
   });
 };
+
+/**
+ * Actualiza el estado de un ticket SQLite
+ * @param {number} ticketId - ID del ticket
+ * @param {string} status - Nuevo estado ('open' | 'in_progress' | 'resolved' | 'closed')
+ * @returns {Promise<Object>} Ticket actualizado
+ */
+export const updateTicketStatus = async (ticketId, status) => {
+  return await request(`/tickets/${ticketId}`, {
+    method: 'PUT',
+    body: { status }
+  });
+};

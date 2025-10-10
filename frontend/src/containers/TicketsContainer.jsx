@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useTickets } from '../hooks/useTickets.js';
-import { createTicket } from '../api/tickets.js';
+import { createTicket, updateTicketStatus } from '../api/tickets.js';
 import { Spinner } from '../components/Spinner.jsx';
 import { ErrorBox } from '../components/ErrorBox.jsx';
 import { EmptyState } from '../components/EmptyState.jsx';
@@ -76,6 +76,12 @@ export const TicketsContainer = () => {
   const handleTicketSelect = (ticket) => {
     console.log('Ticket seleccionado:', ticket);
     // TODO: Implementar navegación o modal de detalle
+  };
+
+  // Handler para cuando se actualiza el estado de un ticket individual
+  const handleTicketStatusUpdate = (updatedTicket) => {
+    // Forzar refresh para actualizar la lista
+    refresh();
   };
 
   // Handler para abrir el modal
@@ -171,6 +177,9 @@ export const TicketsContainer = () => {
             <TicketTable
               items={items}
               onSelect={handleTicketSelect}
+              onStatusChange={handleTicketStatusUpdate}
+              allowStatusChange={true}
+              updateStatusFunction={updateTicketStatus}
             />
             
             <Pagination
