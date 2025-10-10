@@ -1,4 +1,4 @@
-import { getApiBaseUrl, getAuthToken } from '../config/env.js';
+import { getApiBaseUrl, getAuthToken } from '../_helpers/index.js';
 
 /**
  * Cliente HTTP para hacer requests a la API

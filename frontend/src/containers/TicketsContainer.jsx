@@ -1,14 +1,8 @@
 import { useState, useCallback } from 'react';
-import { useTickets } from '../hooks/useTickets.js';
+import { useTickets } from '../_hooks/index.js';
 import { createTicket, updateTicketStatus } from '../api/tickets.js';
-import { Spinner } from '../components/Spinner.jsx';
-import { ErrorBox } from '../components/ErrorBox.jsx';
-import { EmptyState } from '../components/EmptyState.jsx';
-import { Filters } from '../components/Filters.jsx';
-import { TicketTable } from '../components/TicketTable.jsx';
-import { Pagination } from '../components/Pagination.jsx';
-import { CreateTicketForm } from '../components/CreateTicketForm.jsx';
-import { Modal } from '../components/Modal.jsx';
+import { Spinner, ErrorBox, EmptyState, Modal, Pagination } from '../components/Shared/index.js';
+import { Filters, TicketTable, CreateTicketForm } from '../components/Tickets/index.js';
 
 /**
  * Contenedor principal que conecta la lógica de datos con los componentes UI

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useAuth } from '../../_hooks/index.js';
 
 /**
  * Formulario para crear un nuevo ticket
@@ -8,6 +9,7 @@ import React, { useState } from 'react';
  * @param {boolean} props.loading - Si está en proceso de creación
  */
 export const CreateTicketForm = ({ onCreate, onCancel, loading }) => {
+  const { user } = useAuth();
   const [title, setTitle] = useState('');
   const [body, setBody] = useState('');
   const [priority, setPriority] = useState('med');
@@ -32,7 +34,8 @@ export const CreateTicketForm = ({ onCreate, onCancel, loading }) => {
     const result = await onCreate({ 
       title: title.trim(), 
       body: body.trim(), 
-      priority: priority 
+      priority: priority,
+      userId: user?.id || 1 // Enviar userId del usuario logueado
     });
     
     // Si se creó exitosamente, limpiar campos

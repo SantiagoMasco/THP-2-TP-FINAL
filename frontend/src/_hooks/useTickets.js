@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { getUserTickets } from '../api/tickets.js';
-import { getDefaultUserId } from '../config/env.js';
+import { getDefaultUserId } from '../_helpers/index.js';
+import { DEFAULT_PAGE_SIZE, MAX_PAGE_SIZE, MIN_PAGE_SIZE } from '../_constants/index.js';
 
 /**
  * Hook personalizado para manejar el estado y fetching de tickets
@@ -13,7 +14,7 @@ export const useTickets = () => {
   // estados principales
   const [items, setItems] = useState([]);
   const [page, setPage] = useState(1);
-  const [pageSizeRaw, setPageSizeRaw] = useState(20);
+  const [pageSizeRaw, setPageSizeRaw] = useState(DEFAULT_PAGE_SIZE);
   const [scope, setScope] = useState('assigned');
   const [status, setStatus] = useState('');
   const [hasNext, setHasNext] = useState(false);
@@ -23,9 +24,9 @@ export const useTickets = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(''); // normalizado a string
 
-  // clamp de pageSize a [1, 50]
+  // clamp de pageSize a [MIN_PAGE_SIZE, MAX_PAGE_SIZE]
   const pageSize = useMemo(
-    () => Math.min(50, Math.max(1, Number(pageSizeRaw) || 20)),
+    () => Math.min(MAX_PAGE_SIZE, Math.max(MIN_PAGE_SIZE, Number(pageSizeRaw) || DEFAULT_PAGE_SIZE)),
     [pageSizeRaw]
   );
 
@@ -82,3 +83,4 @@ export const useTickets = () => {
     refresh,
   };
 };
+

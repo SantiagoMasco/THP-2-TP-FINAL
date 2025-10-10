@@ -1,5 +1,5 @@
 import { request } from './http.js';
-import { getDefaultUserId } from '../config/env.js';
+import { getDefaultUserId } from '../_helpers/index.js';
 
 /**
  * API wrapper para operaciones de tickets

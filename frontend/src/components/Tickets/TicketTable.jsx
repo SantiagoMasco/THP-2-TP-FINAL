@@ -1,4 +1,4 @@
-import { EmptyState } from './EmptyState.jsx';
+import { EmptyState } from '../Shared/index.js';
 import { TicketStatusSelect } from './TicketStatusSelect.jsx';
 
 /**
