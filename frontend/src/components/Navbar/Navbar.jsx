@@ -99,9 +99,19 @@ export const Navbar = () => {
             </button>
           </>
         ) : (
-          <span style={{ color: '#95a5a6', fontSize: '0.9rem' }}>
-            No autenticado
-          </span>
+          <Link 
+            to={ROUTES.LOGIN}
+            style={{
+              backgroundColor: '#3498db',
+              color: 'white',
+              textDecoration: 'none',
+              padding: '0.5rem 1rem',
+              borderRadius: '4px',
+              fontSize: '0.9rem'
+            }}
+          >
+            🔐 Iniciar Sesión
+          </Link>
         )}
       </div>
 

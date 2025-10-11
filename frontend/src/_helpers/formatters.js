@@ -67,3 +67,4 @@ export const formatUserName = (user) => {
   return user.name || user.email || `Usuario #${user.id}`;
 };
 
+

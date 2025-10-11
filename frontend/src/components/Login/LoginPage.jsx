@@ -2,38 +2,64 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../_hooks/index.js';
 import { ROUTES } from '../../_constants/index.js';
+import axiosInstance from '../../api/axiosInstance.js';
 
 /**
- * Página de Login - Placeholder temporal
- * TODO: Implementar integración real con backend
+ * Página de Login
+ * Permite login con email de usuario existente
  */
 export const LoginPage = () => {
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
   const navigate = useNavigate();
   const { login } = useAuth();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     
-    // TODO: Reemplazar con llamada real al backend
-    // Por ahora, solo simula un login exitoso
-    const mockUser = {
-      id: 1,
-      email: email,
-      name: email.split('@')[0],
-      role: 'USER'
-    };
-    
-    login(mockUser);
-    navigate(ROUTES.TICKETS);
+    if (!email.trim()) {
+      setError('El email es obligatorio');
+      return;
+    }
+
+    setLoading(true);
+    setError('');
+
+    try {
+      // Buscar usuario por email
+      const response = await axiosInstance.get(`/users?email=${email}`);
+      const users = response.data;
+      
+      if (users.length === 0) {
+        setError('Usuario no encontrado. Por favor verifica el email.');
+        return;
+      }
+
+      const user = users[0];
+      
+      // Guardar usuario en authStore
+      login(user);
+      
+      // Redirigir según rol
+      if (user.role === 'AGENT' || user.role === 'ADMIN') {
+        navigate(ROUTES.ADMIN);
+      } else {
+        navigate(ROUTES.TICKETS);
+      }
+      
+    } catch (err) {
+      setError(err.message || 'Error al buscar usuario');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <div className="page">
       <div className="page-content">
         <h1>Login - Helpdesk</h1>
-        <p>Placeholder temporal para autenticación</p>
+        <p>Ingresa tu email para acceder al sistema</p>
         
         <form onSubmit={handleSubmit} style={{ maxWidth: '400px', margin: '2rem auto' }}>
           <div style={{ marginBottom: '1rem' }}>
@@ -45,37 +71,41 @@ export const LoginPage = () => {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              disabled={loading}
               required
               style={{ width: '100%', padding: '0.5rem', border: '1px solid #ddd', borderRadius: '4px' }}
+              placeholder="tu@email.com"
             />
           </div>
           
-          <div style={{ marginBottom: '1rem' }}>
-            <label htmlFor="password" style={{ display: 'block', marginBottom: '0.5rem' }}>
-              Password:
-            </label>
-            <input
-              id="password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              style={{ width: '100%', padding: '0.5rem', border: '1px solid #ddd', borderRadius: '4px' }}
-            />
-          </div>
+          {error && (
+            <div style={{ 
+              color: '#dc3545', 
+              marginBottom: '1rem', 
+              padding: '0.75rem',
+              backgroundColor: '#f8d7da',
+              border: '1px solid #f5c6cb',
+              borderRadius: '4px'
+            }}>
+              {error}
+            </div>
+          )}
           
           <button 
             type="submit" 
             className="btn btn-primary"
+            disabled={loading}
             style={{ width: '100%' }}
           >
-            Iniciar Sesión
+            {loading ? 'Iniciando sesión...' : 'Iniciar Sesión'}
           </button>
         </form>
         
         <div style={{ textAlign: 'center', marginTop: '2rem', color: '#666' }}>
-          <p>⚠️ Esta es una página temporal</p>
-          <p>TODO: Integrar con endpoint /api/auth/login del backend</p>
+          <p>💡 Tip: Usa el email de un usuario creado desde /admin</p>
+          <p style={{ fontSize: '0.9rem', marginTop: '1rem' }}>
+            Ejemplo: admin@ejemplo.com, maria@ejemplo.com
+          </p>
         </div>
       </div>
     </div>

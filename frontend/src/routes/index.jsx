@@ -28,15 +28,9 @@ export const AppRoutes = () => {
       {/* Ruta de login - no requiere autenticación */}
       <Route path="/login" element={<LoginPage />} />
       
-      {/* Ruta de admin - solo AGENT y ADMIN */}
-      <Route 
-        path="/admin" 
-        element={
-          <ProtectedRoute allowedRoles={['AGENT', 'ADMIN']}>
-            <AdminPage />
-          </ProtectedRoute>
-        } 
-      />
+      {/* Ruta de admin - accesible temporalmente sin auth para crear primer usuario */}
+      {/* TODO: Proteger después de crear usuarios iniciales */}
+      <Route path="/admin" element={<AdminPage />} />
       
       {/* Ruta de perfil - requiere autenticación */}
       <Route 

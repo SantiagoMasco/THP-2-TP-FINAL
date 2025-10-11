@@ -22,3 +22,4 @@ export const ROUTE_NAMES = {
   PROFILE: 'Perfil'
 };
 
+
