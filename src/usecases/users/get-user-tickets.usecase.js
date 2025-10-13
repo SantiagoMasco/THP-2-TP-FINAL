@@ -13,7 +13,8 @@ class GetUserTicketsUseCase extends UseCase {
       page = 1,
       pageSize = 20,
       scope = DEFAULT_TICKET_SCOPE,
-      status
+      status,
+      search
     } = input;
 
     // Validar que pageSize no exceda el máximo
@@ -25,13 +26,26 @@ class GetUserTicketsUseCase extends UseCase {
     const where = {};
     if (scope === "assigned") {
       where.assignedUserId = userId;
-    } else { // scope === "created"
+    } else if (scope === "created") {
+      where.createdByUserId = userId;
+    } else if (scope === "all") {
+      // No filtrar por usuario - mostrar todos los tickets
+      // (solo para ADMIN y AGENT, pero la validación de permisos debe hacerse en el frontend)
+    } else {
+      // Default: scope === "created"
       where.createdByUserId = userId;
     }
 
     // Agregar filtro de status si se proporciona
     if (status) {
       where.status = status;
+    }
+
+    // Agregar filtro de búsqueda por título (búsqueda con LIKE en SQLite)
+    if (search && search.trim()) {
+      where.title = {
+        contains: search.trim()
+      };
     }
 
     // Calcular skip y take
