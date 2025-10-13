@@ -6,6 +6,7 @@ const users = require("./routes/users.routes");
 const tickets = require("./routes/tickets.routes");
 const stats = require("./routes/stats.routes");
 const auth = require("./routes/auth.routes");
+const products = require("./routes/products.routes");
 const mongoUserRoutes = require("./routes/mongo.user.routes");
 const mongoTicketRoutes = require("./routes/mongo.ticket.routes");
 const mongoSettingsRoutes = require("./routes/mongo.settings.routes");
@@ -17,7 +18,15 @@ const app = express();
 // CORS configuration
 const allowedOrigins = process.env.ALLOWED_ORIGINS 
   ? process.env.ALLOWED_ORIGINS.split(',').map(origin => origin.trim())
-  : ['http://localhost:3000', 'http://localhost:3001', 'http://127.0.0.1:3000'];
+  : [
+      'http://localhost:3000', 
+      'http://localhost:3001', 
+      'http://localhost:5173',  // Vite frontend
+      'http://localhost:5174',  // Vite frontend (puerto alternativo)
+      'http://127.0.0.1:3000',
+      'http://127.0.0.1:5173',
+      'http://127.0.0.1:5174'
+    ];
 
 const corsOptions = {
   origin: (origin, callback) => {
@@ -44,6 +53,7 @@ app.use("/users", users);
 app.use("/tickets", tickets);
 app.use("/stats", stats);
 app.use("/api/auth", auth);
+app.use("/products", products);
 app.use("/mongo/users", mongoUserRoutes);
 app.use("/mongo/tickets", mongoTicketRoutes);
 app.use("/mongo/settings", mongoSettingsRoutes);

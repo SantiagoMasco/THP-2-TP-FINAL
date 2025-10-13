@@ -149,8 +149,8 @@ class UsersController {
       // Validaciones de entrada usando validators centralizados
       const validatedUserId = validateId(userId, 'userId');
       
-      // VERIFICAR PERMISOS ANTES DE CONSULTAR DB
-      if (req.user.role !== 'ADMIN' && req.user.id !== validatedUserId) {
+      // VERIFICAR PERMISOS ANTES DE CONSULTAR DB (solo si hay autenticación)
+      if (req.user && req.user.role !== 'ADMIN' && req.user.id !== validatedUserId) {
         return res.status(403).json({ 
           error: 'No tienes permisos para ver tickets de este usuario' 
         });

@@ -7,7 +7,8 @@ class TicketsRepository {
       where: { id: parseInt(id) },
       include: {
         createdBy: true,
-        assignedTo: true
+        assignedTo: true,
+        product: true
       }
     });
   }
@@ -21,11 +22,13 @@ class TicketsRepository {
         priority: data.priority || DEFAULT_TICKET_PRIORITY,
         category: data.category,
         createdByUserId: parseInt(data.createdByUserId),
-        assignedUserId: data.assignedUserId ? parseInt(data.assignedUserId) : null
+        assignedUserId: data.assignedUserId ? parseInt(data.assignedUserId) : null,
+        productId: data.productId ? parseInt(data.productId) : null
       },
       include: {
         createdBy: true,
-        assignedTo: true
+        assignedTo: true,
+        product: true
       }
     });
   }
@@ -36,7 +39,8 @@ class TicketsRepository {
       data,
       include: {
         createdBy: true,
-        assignedTo: true
+        assignedTo: true,
+        product: true
       }
     });
   }
@@ -62,7 +66,8 @@ class TicketsRepository {
       take,
       include: {
         createdBy: true,
-        assignedTo: true
+        assignedTo: true,
+        product: true
       }
     });
   }

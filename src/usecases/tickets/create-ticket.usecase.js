@@ -13,6 +13,14 @@ class CreateTicketUseCase extends UseCase {
       throw new Error("CreatedBy user not found");
     }
 
+    // Validar que el producto existe (si se proporciona)
+    if (input.productId) {
+      const product = await this.repos.products.findById(input.productId);
+      if (!product) {
+        throw new Error("Product not found");
+      }
+    }
+
     // Auto-asignación round-robin a un AGENT
     const nextAgent = await this.repos.settings.getNextAgent();
     const assignedUserId = nextAgent ? nextAgent.id : null;
