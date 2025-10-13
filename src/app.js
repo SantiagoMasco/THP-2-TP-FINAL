@@ -18,7 +18,15 @@ const app = express();
 // CORS configuration
 const allowedOrigins = process.env.ALLOWED_ORIGINS 
   ? process.env.ALLOWED_ORIGINS.split(',').map(origin => origin.trim())
-  : ['http://localhost:3000', 'http://localhost:3001', 'http://127.0.0.1:3000'];
+  : [
+      'http://localhost:3000', 
+      'http://localhost:3001', 
+      'http://localhost:5173',  // Vite frontend
+      'http://localhost:5174',  // Vite frontend (puerto alternativo)
+      'http://127.0.0.1:3000',
+      'http://127.0.0.1:5173',
+      'http://127.0.0.1:5174'
+    ];
 
 const corsOptions = {
   origin: (origin, callback) => {
