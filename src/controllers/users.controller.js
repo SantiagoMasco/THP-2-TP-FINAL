@@ -144,7 +144,7 @@ class UsersController {
   async getUserTickets(req, res) {
     try {
       const { userId } = req.params;
-      const { page, pageSize, scope, status } = req.query;
+      const { page, pageSize, scope, status, search } = req.query;
 
       // Validaciones de entrada usando validators centralizados
       const validatedUserId = validateId(userId, 'userId');
@@ -168,7 +168,8 @@ class UsersController {
         page: pageNum,
         pageSize: pageSizeNum,
         scope: scopeValue,
-        status
+        status,
+        search
       });
 
       res.json(result);
