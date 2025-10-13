@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { TicketsContainer } from './containers/TicketsContainer.jsx';
 
-console.log('✅ App.jsx FINAL - Con validacion de usuarios y userId - TIMESTAMP: ' + Date.now());
+console.log('✅ App.jsx FINAL - Con validacion de usuarios y userId');
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -37,14 +37,16 @@ const LoginPage = () => {
       
       console.log('🔐 Login response:', result);
       
+      // Validar que la respuesta tenga el formato esperado
       if (!result || !result.data || result.data.length === 0) {
         setError('Usuario no encontrado. Verifica el email.');
         setLoading(false);
         return;
       }
       
-      const user = result.data[0];
+      const user = result.data[0]; // Tomar el primer usuario del array
       
+      // Validar que el usuario tenga los campos necesarios
       if (!user.id || !user.email || !user.role) {
         setError('Error: datos de usuario incompletos');
         setLoading(false);
@@ -54,7 +56,7 @@ const LoginPage = () => {
       localStorage.setItem('user_data', JSON.stringify({
         id: user.id,
         email: user.email,
-        name: user.name || user.email,
+        name: user.name || user.email, // Fallback al email si no hay name
         role: user.role
       }));
       
@@ -165,7 +167,7 @@ const TicketsPage = () => {
 };
 
 export const App = () => {
-  console.log('App renderizando - Version FINAL - TIMESTAMP: ' + Date.now());
+  console.log('App renderizando - Version FINAL');
   
   return (
     <QueryClientProvider client={queryClient}>
@@ -182,4 +184,3 @@ export const App = () => {
     </QueryClientProvider>
   );
 };
-
