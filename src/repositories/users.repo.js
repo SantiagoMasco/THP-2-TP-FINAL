@@ -33,9 +33,10 @@ class UsersRepository {
     });
   }
 
-  async paginate({ skip, take }) {
+  async paginate({ skip, take, where = {} }) {
     const [data, total] = await Promise.all([
       prisma.user.findMany({
+        where,
         skip,
         take,
         orderBy: { createdAt: 'desc' },
@@ -50,7 +51,7 @@ class UsersRepository {
           // No exponer password en listados
         }
       }),
-      prisma.user.count()
+      prisma.user.count({ where })
     ]);
 
     return { data, total };

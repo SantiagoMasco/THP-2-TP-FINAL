@@ -24,7 +24,8 @@ const USER_ROLE = {
 
 const TICKET_SCOPE = {
   ASSIGNED: 'assigned',
-  CREATED: 'created'
+  CREATED: 'created',
+  ALL: 'all'
 };
 
 // Arrays para validaciones

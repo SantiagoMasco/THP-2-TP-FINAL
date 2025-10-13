@@ -11,7 +11,25 @@ class ListUsersUseCase extends UseCase {
     // Paginación usando helper
     const { page, pageSize, skip, take } = buildPagination(input, 20);
     
-    const { data, total } = await this.repos.users.paginate({ skip, take });
+    // Construir filtros
+    const where = {};
+    
+    // Filtro por email (búsqueda exacta)
+    if (input.email) {
+      where.email = input.email;
+    }
+    
+    // Filtro por rol
+    if (input.role) {
+      where.role = input.role;
+    }
+    
+    // Filtro por estado activo
+    if (input.active !== undefined) {
+      where.active = input.active === 'true' || input.active === true;
+    }
+    
+    const { data, total } = await this.repos.users.paginate({ skip, take, where });
     
     const totalPages = Math.ceil(total / pageSize);
     

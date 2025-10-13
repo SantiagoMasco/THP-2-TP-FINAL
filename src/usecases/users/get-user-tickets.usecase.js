@@ -25,7 +25,13 @@ class GetUserTicketsUseCase extends UseCase {
     const where = {};
     if (scope === "assigned") {
       where.assignedUserId = userId;
-    } else { // scope === "created"
+    } else if (scope === "created") {
+      where.createdByUserId = userId;
+    } else if (scope === "all") {
+      // No filtrar por usuario - mostrar todos los tickets
+      // (solo para ADMIN y AGENT, pero la validación de permisos debe hacerse en el frontend)
+    } else {
+      // Default: scope === "created"
       where.createdByUserId = userId;
     }
 
