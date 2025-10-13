@@ -21,7 +21,8 @@ export const getUserTickets = async (params = {}) => {
     page = 1,
     pageSize = 20,
     scope = 'assigned',
-    status
+    status,
+    search
   } = params;
 
   // Construir parámetros de query
@@ -34,6 +35,11 @@ export const getUserTickets = async (params = {}) => {
   // Agregar status solo si se proporciona y no está vacío
   if (typeof status === 'string' && status.trim() !== '') {
     queryParams.status = status;
+  }
+
+  // Agregar search solo si se proporciona y no está vacío
+  if (typeof search === 'string' && search.trim() !== '') {
+    queryParams.search = search.trim();
   }
 
   // Hacer request al endpoint

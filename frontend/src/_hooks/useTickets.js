@@ -10,6 +10,8 @@ export const useTickets = (userId, userRole = 'USER') => {
   const [pageSizeRaw, setPageSizeRaw] = useState(DEFAULT_PAGE_SIZE);
   const [scope, setScope] = useState(canViewAll ? 'all' : 'created');
   const [status, setStatus] = useState('');
+  const [searchTerm, setSearchTerm] = useState('');
+  const [debouncedSearch, setDebouncedSearch] = useState('');
   const [hasNext, setHasNext] = useState(false);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
 
@@ -21,9 +23,19 @@ export const useTickets = (userId, userRole = 'USER') => {
     [pageSizeRaw]
   );
 
+  // Debounce para la búsqueda: espera 500ms después de que el usuario deje de escribir
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearch(searchTerm);
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, [searchTerm]);
+
+  // Resetear página a 1 cuando cambian los filtros o la búsqueda
   useEffect(() => {
     setPage(1);
-  }, [scope, status]);
+  }, [scope, status, debouncedSearch]);
 
   useEffect(() => {
     if (!userId) {
@@ -41,7 +53,8 @@ export const useTickets = (userId, userRole = 'USER') => {
           page,
           pageSize,
           scope,
-          status
+          status,
+          search: debouncedSearch
         });
         if (ctrl.signal.aborted) return;
         setItems(res?.data ?? []);
@@ -57,7 +70,7 @@ export const useTickets = (userId, userRole = 'USER') => {
     };
     run();
     return () => ctrl.abort();
-  }, [userId, page, pageSize, scope, status, refreshTrigger]);
+  }, [userId, page, pageSize, scope, status, debouncedSearch, refreshTrigger]);
 
   const setPageSize = (v) => setPageSizeRaw(v);
   const refresh = () => {
@@ -66,8 +79,8 @@ export const useTickets = (userId, userRole = 'USER') => {
 
   return {
     items, hasNext, loading, error,
-    page, pageSize, scope, status,
-    setPage, setPageSize, setScope, setStatus,
+    page, pageSize, scope, status, searchTerm,
+    setPage, setPageSize, setScope, setStatus, setSearchTerm,
     refresh,
     canViewAll,
   };

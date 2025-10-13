@@ -2,11 +2,13 @@
  * Componente de filtros para tickets
  * @param {string} scope - Scope actual ('assigned' | 'created' | 'all')
  * @param {string} status - Status actual
+ * @param {string} searchTerm - Término de búsqueda actual
  * @param {Function} onChangeScope - Callback para cambiar scope
  * @param {Function} onChangeStatus - Callback para cambiar status
+ * @param {Function} onChangeSearch - Callback para cambiar término de búsqueda
  * @param {boolean} canViewAll - Si el usuario puede ver todos los tickets
  */
-export const Filters = ({ scope, status, onChangeScope, onChangeStatus, canViewAll = false }) => {
+export const Filters = ({ scope, status, searchTerm = '', onChangeScope, onChangeStatus, onChangeSearch, canViewAll = false }) => {
   const handleScope = (v) => {
     onChangeScope(v);
     onChangeStatus(''); // resetear a "Todos"
@@ -42,6 +44,30 @@ export const Filters = ({ scope, status, onChangeScope, onChangeStatus, canViewA
           <option value="resolved">Resueltos</option>
           <option value="closed">Cerrados</option>
         </select>
+      </div>
+
+      <div className="filter-group search-group">
+        <label htmlFor="search-input">🔍 Buscar:</label>
+        <input
+          id="search-input"
+          type="text"
+          placeholder="Buscar por título..."
+          value={searchTerm}
+          onChange={(e) => onChangeSearch(e.target.value)}
+          className="search-input"
+          aria-label="Buscar tickets por título"
+        />
+        {searchTerm && (
+          <button
+            type="button"
+            onClick={() => onChangeSearch('')}
+            className="clear-search"
+            aria-label="Limpiar búsqueda"
+            title="Limpiar búsqueda"
+          >
+            ✕
+          </button>
+        )}
       </div>
     </div>
   );

@@ -21,11 +21,13 @@ export const TicketsContainer = ({ userId, userRole }) => {
     pageSize,
     scope,
     status,
+    searchTerm,
     // setters
     setPage,
     setPageSize,
     setScope,
     setStatus,
+    setSearchTerm,
     // actions
     refresh,
     // permissions
@@ -160,8 +162,10 @@ export const TicketsContainer = ({ userId, userRole }) => {
       <Filters
         scope={scope}
         status={status}
+        searchTerm={searchTerm}
         onChangeScope={handleScopeChange}
         onChangeStatus={handleStatusChange}
+        onChangeSearch={setSearchTerm}
         canViewAll={canViewAll}
       />
 
