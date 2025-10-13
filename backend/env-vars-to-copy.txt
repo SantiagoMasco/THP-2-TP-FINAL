@@ -1,0 +1,2 @@
+// Agregar estas variables a .env.example y .env:
+MONGODB_URL="mongodb+srv://<user>:<pass>@<cluster>.mongodb.net/<db>?retryWrites=true&w=majority"

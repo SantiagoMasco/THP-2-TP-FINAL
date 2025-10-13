@@ -1,0 +1,28 @@
+# Node / generales
+node_modules/
+*.log
+logs/
+
+# Entornos / locales
+.env
+.env.*
+
+# Prisma generated clients
+/src/generated/
+/prisma/generated/
+
+# SQLite / prisma
+data/
+*.sqlite*
+*.sqlite-journal
+*.sqlite-shm
+*.sqlite-wal
+
+# Archivos de contexto/prompts (no versionar)
+Contexto*
+respuesta-cursor
+
+# Temp
+tmp/
+.tmp/
+.temp/

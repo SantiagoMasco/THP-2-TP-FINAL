@@ -1,0 +1,30 @@
+{
+  "name": "helpdesk-lite",
+  "version": "1.0.0",
+  "description": "HelpDesk Lite - Sistema de tickets con arquitectura en capas y TDD",
+  "type": "commonjs",
+  "scripts": {
+    "dev": "npm run db:push && nodemon src/server.js",
+    "start": "node src/server.js",
+    "test": "node --experimental-vm-modules ./node_modules/jest/bin/jest.js",
+    "test:watch": "npm test -- --watch",
+    "db:push": "prisma db push",
+    "prisma:generate:mongo": "prisma generate --schema=prisma/schema.mongo.prisma"
+  },
+  "dependencies": {
+    "@prisma/client": "^5",
+    "bcrypt": "^5.1.1",
+    "cors": "^2.8.5",
+    "express": "^4",
+    "jsonwebtoken": "^9.0.2",
+    "react-router-dom": "^7.9.4",
+    "yaml": "^2",
+    "zustand": "^5.0.8"
+  },
+  "devDependencies": {
+    "jest": "^29",
+    "nodemon": "^3",
+    "prisma": "^5",
+    "supertest": "^6"
+  }
+}
