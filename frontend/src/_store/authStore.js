@@ -14,8 +14,15 @@ export const useAuthStore = create((set) => ({
   user: getStoredUser(),
   isAuthenticated: !!getStoredUser(),
 
+  // Debug: verificar estado inicial
+  debug: () => {
+    console.log('AuthStore - user:', getStoredUser());
+    console.log('AuthStore - isAuthenticated:', !!getStoredUser());
+  },
+
   // Acciones
   login: (user, token = null) => {
+    console.log('AuthStore - login called with:', user);
     setStoredUser(user);
     if (token) {
       setAuthToken(token);
@@ -24,6 +31,7 @@ export const useAuthStore = create((set) => ({
   },
 
   logout: () => {
+    console.log('AuthStore - logout called');
     setStoredUser(null);
     setAuthToken(null);
     set({ user: null, isAuthenticated: false });

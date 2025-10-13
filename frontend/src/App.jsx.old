@@ -1,0 +1,75 @@
+﻿import { BrowserRouter, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { TicketsContainer } from './containers/TicketsContainer.jsx';
+
+console.log('NUEVO ARCHIVO App.jsx con TicketsContainer');
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+      retry: 1,
+      staleTime: 5 * 60 * 1000,
+    },
+  },
+});
+
+const LoginPage = () => {
+  const [email, setEmail] = useState('');
+  const navigate = useNavigate();
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    localStorage.setItem('user_email', email);
+    navigate('/tickets');
+  };
+
+  return (
+    <div style={{padding: '3rem', maxWidth: '500px', margin: '0 auto', backgroundColor: '#f8f9fa', borderRadius: '8px', marginTop: '3rem', boxShadow: '0 2px 8px rgba(0,0,0,0.1)'}}>
+      <h1 style={{color: '#2c3e50'}}>Login Helpdesk</h1>
+      <p style={{color: '#7f8c8d', marginBottom: '2rem'}}>Ingresa tu email</p>
+      <form onSubmit={handleSubmit}>
+        <input type="email" placeholder="tu@email.com" value={email} onChange={(e) => setEmail(e.target.value)} style={{width: '100%', padding: '0.75rem', marginBottom: '1rem', border: '2px solid #ddd', borderRadius: '4px'}} required />
+        <button type="submit" style={{width: '100%', padding: '0.75rem', fontWeight: 'bold', backgroundColor: '#3498db', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer'}}>Iniciar Sesion</button>
+      </form>
+    </div>
+  );
+};
+
+const TicketsPage = () => {
+  const navigate = useNavigate();
+  const email = localStorage.getItem('user_email');
+  
+  if (!email) return <Navigate to="/login" replace />;
+  
+  return (
+    <div>
+      <div style={{backgroundColor: '#2c3e50', color: 'white', padding: '1rem 2rem', marginBottom: '2rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+        <div>
+          <h1 style={{margin: 0, fontSize: '1.5rem'}}>Helpdesk</h1>
+          <p style={{margin: 0, fontSize: '0.9rem'}}>Usuario: {email}</p>
+        </div>
+        <button onClick={() => { localStorage.removeItem('user_email'); navigate('/login'); }} style={{padding: '0.5rem 1rem', backgroundColor: '#e74c3c', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer'}}>Cerrar Sesion</button>
+      </div>
+      <div style={{padding: '0 2rem'}}>
+        <TicketsContainer />
+      </div>
+    </div>
+  );
+};
+
+export const App = () => {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Navigate to="/login" replace />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/tickets" element={<TicketsPage />} />
+          <Route path="*" element={<Navigate to="/login" replace />} />
+        </Routes>
+      </BrowserRouter>
+    </QueryClientProvider>
+  );
+};

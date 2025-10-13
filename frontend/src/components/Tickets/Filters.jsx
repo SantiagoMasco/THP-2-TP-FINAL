@@ -1,11 +1,12 @@
 /**
  * Componente de filtros para tickets
- * @param {string} scope - Scope actual ('assigned' | 'created')
+ * @param {string} scope - Scope actual ('assigned' | 'created' | 'all')
  * @param {string} status - Status actual
  * @param {Function} onChangeScope - Callback para cambiar scope
  * @param {Function} onChangeStatus - Callback para cambiar status
+ * @param {boolean} canViewAll - Si el usuario puede ver todos los tickets
  */
-export const Filters = ({ scope, status, onChangeScope, onChangeStatus }) => {
+export const Filters = ({ scope, status, onChangeScope, onChangeStatus, canViewAll = false }) => {
   const handleScope = (v) => {
     onChangeScope(v);
     onChangeStatus(''); // resetear a "Todos"
@@ -21,8 +22,9 @@ export const Filters = ({ scope, status, onChangeScope, onChangeStatus }) => {
           value={scope}
           onChange={(e) => handleScope(e.target.value)}
         >
-          <option value="assigned">Asignados a mí</option>
           <option value="created">Creados por mí</option>
+          <option value="assigned">Asignados a mí</option>
+          {canViewAll && <option value="all">Todos los tickets</option>}
         </select>
       </div>
 

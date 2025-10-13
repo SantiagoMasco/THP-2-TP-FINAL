@@ -14,6 +14,125 @@ body {
 .page { padding: 24px; }
 .page-content { max-width: 1100px; margin: 0 auto; }
 
+/* ===== Navbar ===== */
+.navbar {
+  background-color: #2c3e50;
+  padding: 1rem 2rem;
+  margin-bottom: 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.navbar-links {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+}
+
+.navbar-title {
+  color: #ecf0f1;
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.navbar-link {
+  color: #ecf0f1;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 1rem;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.navbar-link:hover {
+  color: #3498db;
+  background-color: rgba(52, 152, 219, 0.1);
+  transform: translateY(-1px);
+}
+
+.navbar-link.active {
+  color: #3498db;
+  font-weight: 600;
+  background-color: rgba(52, 152, 219, 0.15);
+}
+
+.navbar-user {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.navbar-user-info {
+  color: #ecf0f1;
+  font-size: 0.9rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.navbar-user-role {
+  font-size: 0.75rem;
+  opacity: 0.8;
+  font-weight: 400;
+}
+
+.navbar-logout-btn {
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.navbar-logout-btn:hover {
+  background-color: #c0392b;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.navbar-login-btn {
+  background-color: #3498db;
+  color: white;
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.navbar-login-btn:hover {
+  background-color: #2980b9;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
 /* ===== Utilities ===== */
 .mt-2 { margin-top: 8px; } .mb-2 { margin-bottom: 8px; }
 .mt-3 { margin-top: 12px; } .mb-3 { margin-bottom: 12px; }
@@ -430,6 +549,47 @@ body {
   .ticket-table tbody td, .ticket-table thead th { padding: 8px; }
   .form-actions { flex-direction: column; }
   .form-actions .btn { width: 100%; }
+  
+  /* Navbar responsive */
+  .navbar {
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem;
+  }
+  
+  .navbar-links {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+  
+  .navbar-title {
+    font-size: 1rem;
+  }
+  
+  .navbar-link {
+    font-size: 0.9rem;
+    padding: 0.4rem 0.8rem;
+  }
+  
+  .navbar-user {
+    flex-direction: column;
+    gap: 0.5rem;
+    width: 100%;
+  }
+  
+  .navbar-user-info {
+    font-size: 0.8rem;
+    padding: 0.4rem 0.8rem;
+  }
+  
+  .navbar-logout-btn,
+  .navbar-login-btn {
+    width: 100%;
+    justify-content: center;
+    font-size: 0.8rem;
+    padding: 0.4rem 0.8rem;
+  }
   
   /* Modal en móviles */
   .modal-backdrop { padding: 0; }

@@ -1,127 +1,193 @@
-import { Link, useLocation } from 'react-router-dom';
-import { useAuth } from '../../_hooks/index.js';
-import { ROUTES } from '../../_constants/index.js';
+import React from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 /**
- * Componente de navegación simple
- * Muestra links a las diferentes rutas de la aplicación
+ * Navbar - Componente de navegación principal
+ * Muestra botones de login/logout según el estado de autenticación
  */
 export const Navbar = () => {
+  console.log('%c ========== NAVBAR RENDERIZANDO ========== ', 'background: purple; color: white; font-size: 20px; font-weight: bold;');
+  
+  const navigate = useNavigate();
   const location = useLocation();
-  const { user, isAuthenticated, logout } = useAuth();
-
-  const handleLogout = () => {
-    logout();
+  
+  // Obtener usuario del localStorage directamente
+  const getUserFromStorage = () => {
+    try {
+      const userStr = localStorage.getItem('helpdesk_user');
+      return userStr ? JSON.parse(userStr) : null;
+    } catch (error) {
+      console.error('Error parsing user:', error);
+      return null;
+    }
   };
 
-  // Helper para determinar si un link está activo
+  const [user, setUser] = React.useState(getUserFromStorage());
+
+  // Actualizar el usuario cuando cambie el localStorage
+  React.useEffect(() => {
+    const handleStorageChange = () => {
+      setUser(getUserFromStorage());
+    };
+    
+    window.addEventListener('storage', handleStorageChange);
+    
+    // Check cada segundo por si cambia el usuario
+    const interval = setInterval(() => {
+      const currentUser = getUserFromStorage();
+      if (JSON.stringify(currentUser) !== JSON.stringify(user)) {
+        setUser(currentUser);
+      }
+    }, 1000);
+    
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      clearInterval(interval);
+    };
+  }, [user]);
+
+  const handleLogout = () => {
+    localStorage.removeItem('helpdesk_user');
+    localStorage.removeItem('helpdesk_token');
+    setUser(null);
+    navigate('/login');
+  };
+
+  const handleLogin = () => {
+    navigate('/login');
+  };
+
   const isActive = (path) => location.pathname === path;
 
   return (
     <nav style={{
-      backgroundColor: '#2c3e50',
+      backgroundColor: '#FF0000',
       padding: '1rem 2rem',
-      marginBottom: '2rem',
+      marginBottom: 0,
       display: 'flex',
       justifyContent: 'space-between',
       alignItems: 'center',
-      boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+      boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+      width: '100%',
+      minHeight: '70px'
     }}>
       <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center' }}>
-        {/* Tickets - visible para todos */}
-        <Link 
-          to={ROUTES.TICKETS}
-          style={{
-            color: isActive(ROUTES.TICKETS) ? '#3498db' : '#ecf0f1',
-            textDecoration: 'none',
-            fontWeight: isActive(ROUTES.TICKETS) ? 'bold' : 'normal',
-            fontSize: '1rem'
-          }}
+        <h1 style={{ 
+          color: '#FFFFFF', 
+          margin: 0, 
+          fontSize: '2rem', 
+          fontWeight: 'bold',
+          cursor: 'pointer',
+          textShadow: '2px 2px 4px rgba(0,0,0,0.5)'
+        }}
+        onClick={() => navigate('/tickets')}
         >
-          📋 Tickets
-        </Link>
+          ⭐⭐⭐ NAVBAR FUNCIONANDO ⭐⭐⭐
+        </h1>
         
-        {/* Admin - solo para AGENT y ADMIN */}
-        {user && (user.role === 'AGENT' || user.role === 'ADMIN') && (
-          <Link 
-            to={ROUTES.ADMIN}
+        {user && (
+          <button
+            onClick={() => navigate('/tickets')}
             style={{
-              color: isActive(ROUTES.ADMIN) ? '#3498db' : '#ecf0f1',
-              textDecoration: 'none',
-              fontWeight: isActive(ROUTES.ADMIN) ? 'bold' : 'normal',
-              fontSize: '1rem'
+              background: 'none',
+              border: 'none',
+              color: isActive('/tickets') ? '#3498db' : '#ecf0f1',
+              cursor: 'pointer',
+              fontSize: '1rem',
+              fontWeight: 500,
+              padding: '0.5rem 1rem',
+              borderRadius: '6px',
+              backgroundColor: isActive('/tickets') ? 'rgba(52, 152, 219, 0.15)' : 'transparent'
+            }}
+          >
+            📋 Tickets
+          </button>
+        )}
+        
+        {user && (user.role === 'AGENT' || user.role === 'ADMIN') && (
+          <button
+            onClick={() => navigate('/admin')}
+            style={{
+              background: 'none',
+              border: 'none',
+              color: isActive('/admin') ? '#3498db' : '#ecf0f1',
+              cursor: 'pointer',
+              fontSize: '1rem',
+              fontWeight: 500,
+              padding: '0.5rem 1rem',
+              borderRadius: '6px',
+              backgroundColor: isActive('/admin') ? 'rgba(52, 152, 219, 0.15)' : 'transparent'
             }}
           >
             ⚙️ Admin
-          </Link>
-        )}
-        
-        {/* Login - solo si no está autenticado */}
-        {!isAuthenticated && (
-          <Link 
-            to={ROUTES.LOGIN}
-            style={{
-              color: isActive(ROUTES.LOGIN) ? '#3498db' : '#ecf0f1',
-              textDecoration: 'none',
-              fontWeight: isActive(ROUTES.LOGIN) ? 'bold' : 'normal',
-              fontSize: '1rem'
-            }}
-          >
-            🔐 Login
-          </Link>
+          </button>
         )}
       </div>
 
       <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-        {isAuthenticated && user ? (
+        {user ? (
           <>
-            <span style={{ color: '#ecf0f1', fontSize: '0.9rem' }}>
-              {user.role === 'AGENT' && '🎧'}
-              {user.role === 'ADMIN' && '⚙️'}
-              {user.role === 'USER' && '👤'} {user.name || user.email}
-              <span style={{ marginLeft: '0.5rem', fontSize: '0.75rem', opacity: 0.8 }}>
+            <span style={{
+              color: '#ecf0f1',
+              fontSize: '0.9rem',
+              fontWeight: 500,
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.5rem',
+              padding: '0.5rem 1rem',
+              backgroundColor: 'rgba(255, 255, 255, 0.1)',
+              borderRadius: '6px'
+            }}>
+              {user.role === 'AGENT' && '🎧 '}
+              {user.role === 'ADMIN' && '⚙️ '}
+              {user.role === 'USER' && '👤 '}
+              {user.name || user.email}
+              <span style={{ fontSize: '0.75rem', opacity: 0.8, marginLeft: '0.25rem' }}>
                 ({user.role})
               </span>
             </span>
             <button
               onClick={handleLogout}
+              type="button"
               style={{
                 backgroundColor: '#e74c3c',
                 color: 'white',
                 border: 'none',
                 padding: '0.5rem 1rem',
-                borderRadius: '4px',
+                borderRadius: '6px',
                 cursor: 'pointer',
-                fontSize: '0.9rem'
+                fontSize: '0.9rem',
+                fontWeight: 500,
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.5rem'
               }}
             >
-              Cerrar Sesión
+              🚪 Cerrar sesión
             </button>
           </>
         ) : (
-          <Link 
-            to={ROUTES.LOGIN}
+          <button
+            onClick={handleLogin}
+            type="button"
             style={{
               backgroundColor: '#3498db',
               color: 'white',
-              textDecoration: 'none',
+              border: 'none',
               padding: '0.5rem 1rem',
-              borderRadius: '4px',
-              fontSize: '0.9rem'
+              borderRadius: '6px',
+              cursor: 'pointer',
+              fontSize: '0.9rem',
+              fontWeight: 500,
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.5rem'
             }}
           >
-            🔐 Iniciar Sesión
-          </Link>
+            🔐 Iniciar sesión
+          </button>
         )}
       </div>
-
-      {/* TODO: Agregar más elementos de navegación
-       * - Notificaciones
-       * - Perfil de usuario
-       * - Búsqueda global
-       * - Menú responsive para móviles
-       */}
     </nav>
   );
 };
-

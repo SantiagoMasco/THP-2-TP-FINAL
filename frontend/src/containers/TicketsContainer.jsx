@@ -6,8 +6,10 @@ import { Filters, TicketTable, CreateTicketForm } from '../components/Tickets/in
 
 /**
  * Contenedor principal que conecta la lógica de datos con los componentes UI
+ * @param {number} userId - ID del usuario logueado
+ * @param {string} userRole - Rol del usuario (USER | AGENT | ADMIN)
  */
-export const TicketsContainer = () => {
+export const TicketsContainer = ({ userId, userRole }) => {
   const {
     // data
     items,
@@ -26,7 +28,9 @@ export const TicketsContainer = () => {
     setStatus,
     // actions
     refresh,
-  } = useTickets();
+    // permissions
+    canViewAll,
+  } = useTickets(userId, userRole);
 
   // Estado para el modal de creación
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -149,6 +153,7 @@ export const TicketsContainer = () => {
           onCreate={handleCreate}
           onCancel={handleCloseModal}
           loading={creating}
+          userId={userId}
         />
       </Modal>
 
@@ -157,6 +162,7 @@ export const TicketsContainer = () => {
         status={status}
         onChangeScope={handleScopeChange}
         onChangeStatus={handleStatusChange}
+        canViewAll={canViewAll}
       />
 
       <div className="tickets-content">
