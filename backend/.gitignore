@@ -17,6 +17,8 @@ data/
 *.sqlite-journal
 *.sqlite-shm
 *.sqlite-wal
+dev.db
+*.db
 
 # Archivos de contexto/prompts (no versionar)
 Contexto*

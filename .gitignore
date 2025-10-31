@@ -3,3 +3,8 @@ frontend/.cursor_drafts/
 frontend/node_modules/
 frontend/dist/
 frontend/.vite/
+
+# Node.js binaries (no deberían estar en el repo)
+node-v*/
+node*.tar.gz
+node*.zip

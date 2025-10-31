@@ -8,7 +8,7 @@ export const useTickets = (userId, userRole = 'USER') => {
   const [items, setItems] = useState([]);
   const [page, setPage] = useState(1);
   const [pageSizeRaw, setPageSizeRaw] = useState(DEFAULT_PAGE_SIZE);
-  const [scope, setScope] = useState(canViewAll ? 'all' : 'created');
+  const [scope, setScope] = useState('assigned');
   const [status, setStatus] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
   const [debouncedSearch, setDebouncedSearch] = useState('');

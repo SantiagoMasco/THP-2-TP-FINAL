@@ -44,10 +44,7 @@ export const useAuthStore = create((set) => ({
       return { user: updatedUser };
     });
   },
-
-  // TODO: Agregar más acciones según sea necesario
-  // - refreshToken()
-  // - checkSession()
+  
 }));
 
 

@@ -19,7 +19,7 @@ class UsersRepository {
       data: {
         name: data.name,
         email: data.email,
-        password: data.password, // Agregar soporte para password
+        password: data.password || null, // Manejar password opcional
         role: data.role || DEFAULT_USER_ROLE,
         active: data.active !== undefined ? data.active : true
       }
