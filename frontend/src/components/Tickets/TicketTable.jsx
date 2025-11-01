@@ -48,7 +48,6 @@ export const TicketTable = ({ items, onSelect, onStatusChange, allowStatusChange
       <table className="ticket-table">
         <thead>
           <tr>
-            <th scope="col">ID</th>
             <th scope="col">Título</th>
             <th scope="col">Estado</th>
             <th scope="col">Prioridad</th>
@@ -64,7 +63,6 @@ export const TicketTable = ({ items, onSelect, onStatusChange, allowStatusChange
               onClick={(e) => handleRowClick(t, e)}
               className={onSelect ? 'clickable' : ''}
             >
-              <td>#{t.id}</td>
               <td className="ticket-title" title={t.title}>{t.title}</td>
               <td>
                 {allowStatusChange && onStatusChange && updateStatusFunction ? (
