@@ -17,17 +17,8 @@ data/
 *.sqlite-journal
 *.sqlite-shm
 *.sqlite-wal
-
-# Frontend
-frontend/.cursor_drafts/
-frontend/node_modules/
-frontend/dist/
-frontend/.vite/
-
-# Node.js binaries (no deberían estar en el repo)
-node-v*/
-node*.tar.gz
-node*.zip
+dev.db
+*.db
 
 # Archivos de contexto/prompts (no versionar)
 Contexto*

@@ -1,0 +1,66 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  name      String?
+  email     String   @unique
+  password  String?
+  role      String   @default("USER") // USER | AGENT | ADMIN
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  createdTickets Ticket[] @relation("CreatedBy")
+  assignedTickets Ticket[] @relation("AssignedTo")
+}
+
+model Product {
+  id        Int      @id @default(autoincrement())
+  name      String
+  price     Float?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  tickets   Ticket[]
+}
+
+model Ticket {
+  id          Int       @id @default(autoincrement())
+  title       String
+  description String?
+  status      String    @default("open") // open|in_progress|resolved|closed
+  priority    String    @default("med")  // low|med|high
+  category    String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  resolvedAt  DateTime?
+  
+  createdByUserId Int
+  createdBy       User @relation("CreatedBy", fields: [createdByUserId], references: [id])
+  
+  assignedUserId Int?
+  assignedTo     User? @relation("AssignedTo", fields: [assignedUserId], references: [id])
+  
+  productId Int?
+  product   Product? @relation(fields: [productId], references: [id])
+  
+  @@index([assignedUserId, createdAt, id])
+  @@index([createdByUserId, createdAt, id])
+  @@index([productId])
+}
+
+// Round-robin: elegimos siempre el siguiente AGENT (circular),
+// usando AppSettings.lastAssignedAgentId para recordar el último asignado.
+model AppSettings {
+  id                   Int      @id @default(autoincrement())
+  lastAssignedAgentId  Int?
+  updatedAt           DateTime @updatedAt
+}
+
