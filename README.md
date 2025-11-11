@@ -18,7 +18,7 @@ npm install
 npm run dev
 ```
 
-* **Variables de entorno:** este frontend usa variables `.env`. Pedilas a **@santimasc**.
+* **Variables de entorno:** este frontend usa variables `.env`. Pedirle a **@santimasco**.
 * Abrí la URL que muestra Vite (por ej. `http://localhost:5173`).
 
 ---
