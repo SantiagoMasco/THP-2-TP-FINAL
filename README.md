@@ -31,7 +31,6 @@ npm run dev
 * **Axios** → Peticiones HTTP a la API (GET/POST/PUT/DELETE).
 * **Zustand** → Estado global simple (ej: usuario logueado, token).
 * **@tanstack/react-query** → Cache y sincronización de datos del servidor (loading, error, refetch).
-* **ESLint** → Reglas básicas de calidad de código (opcional en el flujo de dev).
 
 ---
 
