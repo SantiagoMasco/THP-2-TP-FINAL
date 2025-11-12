@@ -50,7 +50,7 @@ npm run dev
 
 ---
 
-## 4) Estado global con Zustand (simple y directo)
+## 4) Estado global con Zustand
 
 * **Qué guarda:** datos compartidos entre pantallas (ej: `user`, `token`, funciones `login/logout`).
 * **Por qué Zustand:** sintaxis mínima, sin boilerplate, rendimiento sólido.
