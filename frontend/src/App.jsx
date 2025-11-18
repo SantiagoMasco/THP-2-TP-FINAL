@@ -27,7 +27,7 @@ const LoginPage = () => {
     setError('');
     
     try {
-      const response = await fetch(`https://front-1g5s.onrender.com/users?email=${encodeURIComponent(email)}`);
+      const response = await fetch(`https://thp-2-tp-final.onrender.com/users?email=${encodeURIComponent(email)}`);
       
       if (!response.ok) {
         throw new Error('Error al buscar usuario');

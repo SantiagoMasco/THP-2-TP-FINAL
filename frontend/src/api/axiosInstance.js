@@ -5,7 +5,7 @@ import { getApiBaseUrl, getAuthToken } from '../_helpers/index.js';
  * Instancia centralizada de Axios para todas las peticiones API
  */
 const axiosInstance = axios.create({
-  baseURL: 'https://thp-2-tp-final.onrender.com',
+  baseURL: getApiBaseUrl(),
   headers: {
     'Content-Type': 'application/json',
   },
