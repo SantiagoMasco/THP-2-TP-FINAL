@@ -25,7 +25,11 @@ const allowedOrigins = process.env.ALLOWED_ORIGINS
       'http://localhost:5174',  // Vite frontend (puerto alternativo)
       'http://127.0.0.1:3000',
       'http://127.0.0.1:5173',
-      'http://127.0.0.1:5174'
+      'http://127.0.0.1:5174',
+      "https://front-1g5s.onrender.com",
+      "http://front-1g5s.onrender.com",
+      "https://186.130.67.180",
+      "http://186.130.67.180"
     ];
 
 const corsOptions = {
