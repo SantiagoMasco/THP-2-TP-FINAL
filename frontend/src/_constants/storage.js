@@ -10,7 +10,8 @@ export const STORAGE_KEYS = {
 };
 
 export const DEFAULT_VALUES = {
-  API_BASE_URL: 'http://localhost:3000',
+  // API_BASE_URL: 'http://localhost:3000',
+  API_BASE_URL: 'https://thp-2-tp-final.onrender.com',
   DEFAULT_USER_ID: 1
 };
 
