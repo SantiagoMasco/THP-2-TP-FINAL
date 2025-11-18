@@ -1,0 +1,10 @@
+{
+  "routes": {
+    "/users/*": {
+      "proxy": "https://thp-2-tp-final.onrender.com/users/:splat"
+    },
+    "/tickets/*": {
+      "proxy": "https://thp-2-tp-final.onrender.com/tickets/:splat"
+    }
+  }
+}
