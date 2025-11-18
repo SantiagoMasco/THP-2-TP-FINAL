@@ -9,7 +9,7 @@ import { STORAGE_KEYS, DEFAULT_VALUES } from '../_constants/index.js';
  * @returns {string} URL base de la API
  */
 export const getApiBaseUrl = () => {
-  return localStorage.getItem(STORAGE_KEYS.API_BASE_URL) ?? DEFAULT_VALUES.API_BASE_URL;
+  return 'https://thp-2-tp-final.onrender.com';
 };
 
 /**
