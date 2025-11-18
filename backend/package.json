@@ -31,10 +31,7 @@
     "build": "npx prisma generate",
     "start": "node src/server.js"
   },
-  {
   "engines": {
-    "node": "20.10.0"
+    "node": "20.x"
   }
-}
-
 }
