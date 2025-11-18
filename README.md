@@ -1,5 +1,6 @@
 # HelpDesk Lite
 
+
 # MVP GESTIENDO USUARIOS
 
 ## Frontend
@@ -100,3 +101,4 @@ npm run dev
 ## 9) Resumen técnico
 
 El frontend está construido con **React + Vite**. Utiliza **Axios** para comunicación HTTP con la API, **Zustand** para gestión del estado global (autenticación y sesión de usuario) y **React Router DOM** para navegación en una Single Page Application (SPA). **React Query** está configurado y se emplea principalmente para cache y gestión de estados de carga/errores en `UsersManager` (usuarios), mientras que los tickets usan hooks personalizados (`useTickets`) con `useEffect` para manejo de datos y estados.
+
