@@ -1,5 +1,7 @@
 const express = require("express");
 const prismaMongo = require("../lib/prismaMongo");
+const { requireAuthMongo, requireRoleMongo } = require("../middleware/mongoAuth");
+const { USER_ROLE } = require("../constants/enums");
 const router = express.Router();
 
 // POST /mongo/tickets
@@ -25,6 +27,22 @@ router.get("/", async (req, res) => {
   }
 });
 
+// GET /mongo/tickets/:id
+router.get("/:id", requireAuthMongo, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const ticket = await prismaMongo.ticket.findUnique({
+      where: { id },
+    });
+    if (!ticket) {
+      return res.status(404).json({ error: "Ticket no encontrado" });
+    }
+    return res.json(ticket);
+  } catch (err) {
+    return res.status(400).json({ error: err.message });
+  }
+});
+
 // PUT /mongo/tickets/:id
 router.put("/:id", async (req, res) => {
   try {
@@ -41,15 +59,21 @@ router.put("/:id", async (req, res) => {
 });
 
 // DELETE /mongo/tickets/:id
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", requireAuthMongo, requireRoleMongo(USER_ROLE.ADMIN), async (req, res) => {
   try {
     const { id } = req.params;
-    await prismaMongo.ticket.delete({
-      where: { id }
+    const existing = await prismaMongo.ticket.findUnique({
+      where: { id },
     });
-    res.json({ deleted: true });
+    if (!existing) {
+      return res.status(404).json({ error: "Ticket no encontrado" });
+    }
+    await prismaMongo.ticket.delete({
+      where: { id },
+    });
+    return res.json({ deleted: true });
   } catch (err) {
-    res.status(400).json({ error: err.message });
+    return res.status(400).json({ error: err.message });
   }
 });
 

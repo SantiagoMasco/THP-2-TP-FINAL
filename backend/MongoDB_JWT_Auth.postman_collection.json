@@ -1,0 +1,226 @@
+{
+	"info": {
+		"name": "MongoDB JWT Auth - Tickets Protegidos",
+		"description": "Colección para probar autenticación JWT en rutas MongoDB de tickets",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "1. Autenticación",
+			"item": [
+				{
+					"name": "Login - Obtener Token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    const response = pm.response.json();",
+									"    pm.environment.set(\"jwt_token\", response.token);",
+									"    pm.environment.set(\"user_role\", response.user.role);",
+									"    console.log(\"Token guardado:\", response.token);",
+									"    console.log(\"Rol del usuario:\", response.user.role);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"admin@test.com\",\n  \"password\": \"password123\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/auth/login",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						},
+						"description": "Hace login y guarda el token JWT en la variable de entorno 'jwt_token'"
+					}
+				}
+			]
+		},
+		{
+			"name": "2. Tickets MongoDB - Protegidos",
+			"item": [
+				{
+					"name": "GET Ticket por ID (Requiere Auth)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/mongo/tickets/{{ticket_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"mongo",
+								"tickets",
+								"{{ticket_id}}"
+							]
+						},
+						"description": "Obtiene un ticket por ID. Requiere autenticación (cualquier rol)."
+					}
+				},
+				{
+					"name": "GET Ticket por ID - Sin Token (401)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/mongo/tickets/{{ticket_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"mongo",
+								"tickets",
+								"{{ticket_id}}"
+							]
+						},
+						"description": "Prueba sin token - debe devolver 401"
+					}
+				},
+				{
+					"name": "DELETE Ticket (Solo ADMIN)",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/mongo/tickets/{{ticket_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"mongo",
+								"tickets",
+								"{{ticket_id}}"
+							]
+						},
+						"description": "Elimina un ticket. Solo usuarios con rol ADMIN pueden ejecutar esta acción."
+					}
+				},
+				{
+					"name": "DELETE Ticket - Sin Token (401)",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/mongo/tickets/{{ticket_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"mongo",
+								"tickets",
+								"{{ticket_id}}"
+							]
+						},
+						"description": "Prueba DELETE sin token - debe devolver 401"
+					}
+				}
+			]
+		},
+		{
+			"name": "3. Tickets MongoDB - Públicas (Referencia)",
+			"item": [
+				{
+					"name": "GET Todos los Tickets",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/mongo/tickets",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"mongo",
+								"tickets"
+							]
+						},
+						"description": "Lista todos los tickets (ruta pública, sin autenticación)"
+					}
+				},
+				{
+					"name": "POST Crear Ticket",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"title\": \"Ticket de prueba\",\n  \"userId\": \"507f1f77bcf86cd799439011\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/mongo/tickets",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"mongo",
+								"tickets"
+							]
+						},
+						"description": "Crea un nuevo ticket (ruta pública). Guarda el ID del ticket creado para usar en otras pruebas."
+					}
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:3000",
+			"type": "string"
+		},
+		{
+			"key": "jwt_token",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "user_role",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "ticket_id",
+			"value": "",
+			"type": "string",
+			"description": "ID del ticket a usar en las pruebas (ObjectId de MongoDB)"
+		}
+	]
+}
+

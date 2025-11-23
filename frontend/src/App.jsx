@@ -114,6 +114,7 @@ const LoginPage = () => {
       </div>
     </div>
   );
+
 };
 
 const TicketsPage = () => {
@@ -130,7 +131,7 @@ const TicketsPage = () => {
   
   const user = getUserData();
   
-  console.log('🎫 TicketsPage: User data:', user);
+  console.log('TicketsPage: User data:', user);
   
   if (!user) return <Navigate to="/login" replace />;
   
