@@ -17,7 +17,12 @@ export const request = async (path, options = {}) => {
   } = options;
 
   // Construir URL absoluta
+  // NOTA: Este archivo ya no se usa, el frontend ahora usa Supabase directamente
+  // Se mantiene por compatibilidad pero no debería ser importado
   const baseUrl = getApiBaseUrl();
+  if (!baseUrl) {
+    throw new Error('http.js ya no se usa. El frontend ahora usa Supabase directamente. Usa las funciones en api/users.js o api/tickets.js');
+  }
   const url = new URL(path, baseUrl);
 
   // Agregar parámetros de query string
