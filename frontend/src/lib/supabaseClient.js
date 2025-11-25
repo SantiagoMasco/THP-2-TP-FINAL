@@ -10,10 +10,7 @@ const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || process.env.VITE_SUPABA
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || process.env.VITE_SUPABASE_ANON_KEY;
 
 if (!supabaseUrl || !supabaseAnonKey) {
-  console.error('❌ Faltan variables de entorno de Supabase:');
-  console.error('   VITE_SUPABASE_URL:', supabaseUrl ? '✅' : '❌');
-  console.error('   VITE_SUPABASE_ANON_KEY:', supabaseAnonKey ? '✅' : '❌');
-  console.error('   Agrega estas variables en tu archivo .env');
+  console.error(' Faltan variables de entorno de Supabase:');
 }
 
 /**
@@ -21,7 +18,7 @@ if (!supabaseUrl || !supabaseAnonKey) {
  */
 export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
   auth: {
-    persistSession: false, // No persistir sesión de auth, manejamos nosotros
+    persistSession: false,
     autoRefreshToken: false,
   },
 });
