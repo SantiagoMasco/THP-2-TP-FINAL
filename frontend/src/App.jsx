@@ -27,24 +27,21 @@ const LoginPage = () => {
     setError('');
     
     try {
-      const response = await fetch(`https://thp-2-tp-final.onrender.com/users?email=${encodeURIComponent(email)}`);
+      // Importar dinámicamente para evitar problemas de circular dependencies
+      const { getUsersByEmail } = await import('./api/users.js');
       
-      if (!response.ok) {
-        throw new Error('Error al buscar usuario');
-      }
+      const users = await getUsersByEmail(email);
       
-      const result = await response.json();
+      console.log('🔐 Login response:', users);
       
-      console.log('🔐 Login response:', result);
-      
-      // Validar que la respuesta tenga el formato esperado
-      if (!result || !result.data || result.data.length === 0) {
+      // Validar que se encontró al menos un usuario
+      if (!users || users.length === 0) {
         setError('Usuario no encontrado. Verifica el email.');
         setLoading(false);
         return;
       }
       
-      const user = result.data[0]; // Tomar el primer usuario del array
+      const user = users[0]; // Tomar el primer usuario del array
       
       // Validar que el usuario tenga los campos necesarios
       if (!user.id || !user.email || !user.role) {

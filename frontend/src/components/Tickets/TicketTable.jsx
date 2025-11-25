@@ -78,9 +78,9 @@ export const TicketTable = ({ items, onSelect, onStatusChange, allowStatusChange
                 )}
               </td>
               <td>{t.priority || '-'}</td>
-              <td>{t.createdBy?.name || t.createdBy?.email || '-'}</td>
-              <td>{t.assignedTo?.name || t.assignedTo?.email || '-'}</td>
-              <td>{formatDate(t.createdAt)}</td>
+              <td>{t.created_by_name || t.created_by_email || t.created_by_user?.name || t.created_by_user?.email || '-'}</td>
+              <td>{t.assigned_to_name || t.assigned_to_email || t.assigned_user?.name || t.assigned_user?.email || '-'}</td>
+              <td>{formatDate(t.created_at || t.createdAt)}</td>
             </tr>
           ))}
         </tbody>

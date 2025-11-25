@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../_hooks/index.js';
 import { ROUTES } from '../../_constants/index.js';
-import axiosInstance from '../../api/axiosInstance.js';
+import { getUsersByEmail } from '../../api/users.js';
 
 /**
  * Página de Login
@@ -27,9 +27,8 @@ export const LoginPage = () => {
     setError('');
 
     try {
-      // Buscar usuario por email
-      const response = await axiosInstance.get(`/users?email=${email}`);
-      const users = response.data;
+      // Buscar usuario por email usando Supabase
+      const users = await getUsersByEmail(email);
       
       if (users.length === 0) {
         setError('Usuario no encontrado. Por favor verifica el email.');

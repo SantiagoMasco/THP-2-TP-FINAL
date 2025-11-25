@@ -5,11 +5,13 @@ import { STORAGE_KEYS, DEFAULT_VALUES } from '../_constants/index.js';
  */
 
 /**
- * Obtiene la URL base de la API
- * @returns {string} URL base de la API
+ * Obtiene la URL base de la API (DEPRECATED - Ya no se usa, ahora usamos Supabase)
+ * @returns {string} URL base de la API (retorna null por compatibilidad)
+ * @deprecated Ya no se usa API_BASE_URL, el frontend ahora usa Supabase directamente
  */
 export const getApiBaseUrl = () => {
-  return localStorage.getItem(STORAGE_KEYS.API_BASE_URL) ?? DEFAULT_VALUES.API_BASE_URL;
+  // Ya no se usa, retornamos null para compatibilidad
+  return null;
 };
 
 /**
