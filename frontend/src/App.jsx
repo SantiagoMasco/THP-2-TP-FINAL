@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { TicketsContainer } from './containers/TicketsContainer.jsx';
 
-console.log('✅ App.jsx FINAL - Con validacion de usuarios y userId');
+console.log('App.jsx FINAL - Con validacion de usuarios y userId');
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -32,7 +32,7 @@ const LoginPage = () => {
       
       const users = await getUsersByEmail(email);
       
-      console.log('🔐 Login response:', users);
+      console.log('Login response:', users);
       
       // Validar que se encontró al menos un usuario
       if (!users || users.length === 0) {
@@ -57,11 +57,11 @@ const LoginPage = () => {
         role: user.role
       }));
       
-      console.log('✅ Login exitoso:', user);
+      console.log('Login exitoso:', user);
       navigate('/tickets');
       
     } catch (err) {
-      console.error('❌ Login error:', err);
+      console.error('Login error:', err);
       setError(err.message || 'Error al iniciar sesion');
       setLoading(false);
     }

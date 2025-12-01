@@ -16,7 +16,7 @@ npm install
 npm run dev
 ```
 
-* **Variables de entorno:** este frontend usa Supabase. Configura las variables en `.env` (ver `SUPABASE_SETUP.md`).
+* **Variables de entorno:** este frontend usa variables `.env`. Pedilas a **@santimasc**.
 * Abrí la URL que muestra Vite (por ej. `http://localhost:5173`).
 
 ---
@@ -26,7 +26,7 @@ npm run dev
 * **React** → Librería para construir la interfaz (UI).
 * **Vite** → Dev server y build rápido para React.
 * **React Router DOM** → Navegación entre pantallas sin recargar.
-* **@supabase/supabase-js** → Cliente para conectarse directamente a Supabase (base de datos).
+* **Axios** → Peticiones HTTP a la API (GET/POST/PUT/DELETE).
 * **Zustand** → Estado global simple (ej: usuario logueado, token).
 * **@tanstack/react-query** → Cache y sincronización de datos del servidor (loading, error, refetch).
 * **ESLint** → Reglas básicas de calidad de código (opcional en el flujo de dev).
@@ -61,16 +61,16 @@ npm run dev
 
 ---
 
-## 5) Data Fetching con Supabase
+## 5) Data Fetching con React Query + Axios
 
-* **Supabase** se conecta directamente a la base de datos PostgreSQL.
-* Las funciones en `src/api/` usan el cliente de Supabase para:
-  * **Consultas** (SELECT) con filtros, paginación y búsqueda
-  * **Inserción** (INSERT) de nuevos registros
-  * **Actualización** (UPDATE) de registros existentes
-  * **Eliminación** (DELETE) o desactivación de registros
+* **Axios** hace la **petición** HTTP.
+* **React Query** maneja:
 
-> **Nota:** El frontend ahora se conecta directamente a Supabase, sin necesidad del backend Node.js. Ver `SUPABASE_SETUP.md` para configuración.
+  * **cache** (no repite pedidos innecesarios),
+  * **estados** `isLoading / error`,
+  * **refetch** e **invalidaciones** cuando creo/edito algo.
+
+> **Nota:** React Query está configurado globalmente pero actualmente se usa principalmente en `UsersManager` para gestión de usuarios. Los tickets usan `useTickets` con `useEffect` para manejo manual de estados.
 
 ---
 
@@ -101,4 +101,4 @@ npm run dev
 
 ## 9) Resumen técnico
 
-El frontend está construido con **React + Vite**. Utiliza **Supabase** para conectarse directamente a la base de datos PostgreSQL, **Zustand** para gestión del estado global (autenticación y sesión de usuario) y **React Router DOM** para navegación en una Single Page Application (SPA). Los tickets usan hooks personalizados (`useTickets`) con `useEffect` para manejo de datos y estados. **React Query** está configurado pero actualmente no se usa activamente.
+El frontend está construido con **React + Vite**. Utiliza **Axios** para comunicación HTTP con la API, **Zustand** para gestión del estado global (autenticación y sesión de usuario) y **React Router DOM** para navegación en una Single Page Application (SPA). **React Query** está configurado y se emplea principalmente para cache y gestión de estados de carga/errores en `UsersManager` (usuarios), mientras que los tickets usan hooks personalizados (`useTickets`) con `useEffect` para manejo de datos y estados.
