@@ -19,6 +19,7 @@ export const CreateTicketForm = ({ onCreate, onCancel, loading, userId }) => {
     
     // Validaciones
     if (!title.trim()) {
+      
       setError('El título es obligatorio');
       return;
     }
@@ -28,13 +29,13 @@ export const CreateTicketForm = ({ onCreate, onCancel, loading, userId }) => {
       return;
     }
 
-    // Limpiar error y llamar callback
+
     setError('');
     const result = await onCreate({ 
       title: title.trim(), 
       body: body.trim(), 
       priority: priority,
-      userId: userId || 1 // Enviar userId del usuario logueado
+      userId: userId || 1 
     });
     
     // Si se creó exitosamente, limpiar campos

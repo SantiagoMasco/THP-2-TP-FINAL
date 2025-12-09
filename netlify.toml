@@ -2,12 +2,11 @@
 [build]
   base = "frontend"
   command = "npm run build"
-  publish = "frontend/dist"
+  publish = "dist"
 
 # Configuración para ignorar las claves de Supabase en el escaneo de secretos
 # Estas claves están diseñadas para ser públicas en el frontend
 # La clave anónima (anon key) de Supabase es segura para exponer en el cliente
 [build.environment]
   SECRETS_SCAN_OMIT_KEYS = "VITE_SUPABASE_ANON_KEY,VITE_SUPABASE_URL"
-  SECRETS_SCAN_OMIT_PATHS = "frontend/dist/**"
-
+  SECRETS_SCAN_OMIT_PATHS = "dist/**"
