@@ -1,5 +1,6 @@
 import { supabase, handleSupabaseError } from '../lib/supabaseClient.js';
 import { getDefaultUserId } from '../_helpers/index.js';
+import { getNextAgent } from './settings.js';
 
 /**
  * API wrapper para operaciones de tickets usando Supabase
@@ -142,10 +143,15 @@ export const createTicket = async (data) => {
       category
     } = data;
 
+    // Auto-asignación round-robin a un AGENT
+    const nextAgent = await getNextAgent();
+    const assignedUserId = nextAgent ? nextAgent.id : null;
+
     const ticketData = {
       title,
       description: body, // Supabase usa 'description', el frontend usa 'body'
       created_by_user_id: userId,
+      assigned_user_id: assignedUserId, // Asignar agente automáticamente
       status: 'open',
       priority: priority || 'med'
     };
